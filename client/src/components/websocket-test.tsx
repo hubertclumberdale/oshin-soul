@@ -1,127 +1,5 @@
 /* 
-FEATURES: TO IMPLEMENT
-Server
-Game Management
 
-Create the game
-Instantiate the socket and save the Unity reference
-Add players to the game
-Listen for phone connections and save them in a list
-Start the game
-Notify everyone (Unity and players) that the game has started
-Incomplete Sentence
-Notify everyone of the incomplete sentence
-Turns
-Keep track of turns. Start a new turn until the game is over
-Mode
-Keep track of the current mode (lobby, movement, compose, vote, win, end)
-Time
-Notify when the movement mode starts and ends
-Winner
-Keep track of the score for each player. When the game ends, the player with the highest score wins
-Start a second round
-Notify that a new round has started
-End the game
-Notify the winner
-Player Management
-Player movement using x, y
-Player submission
-*/
-
-import express from 'express';
-import http from 'http';
-import { Server } from 'socket.io';
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
-
-enum Mode {
-    Lobby = 'lobby',
-    Movement = 'movement',
-    Compose = 'compose',
-    Vote = 'vote',
-    Win = 'win',
-    End = 'end',
-}
-
-// Room Management
-interface Room {
-    id: string;
-    players: Player[]; // Updated to use Player interface
-    unity: string
-    gameStarted: boolean;
-    incompleteSentence: string;
-    turns: number;
-    currentMode: Mode;
-    playersAreMoving: boolean;
-    winner: string | null;
-    roundNumber: number
-}
-
-enum Color {
-    Red = 'red',
-    Blue = 'blue',
-    Green = 'green',
-    Yellow = 'yellow',
-    Orange = 'orange',
-    Purple = 'purple',
-    Pink = 'pink',
-    Brown = 'brown',
-    White = 'white',
-    Black = 'black',
-}
-
-interface Player {
-    id: string;
-    score: number;
-    color: Color;
-    submission: string
-}
-
-const rooms: Room[] = [];
-
-enum SocketEvent {
-    Connection = 'connection',
-    CreateRoom = 'createRoom',
-    JoinRoom = 'joinRoom',
-    StartGame = 'startGame',
-    IncompleteSentence = 'incompleteSentence',
-    NextTurn = 'nextTurn',
-    ChangeMode = 'changeMode',
-    StartMovementMode = 'startMovementMode',
-    EndMovementMode = 'endMovementMode',
-    UpdateScore = 'updateScore',
-    StartNewRound = 'startNewRound',
-    EndGame = 'endGame',
-    PlayerMovement = 'playerMovement',
-    PlayerSubmission = 'playerSubmission',
-    Disconnect = 'disconnect',
-}
-
-enum SocketEmit {
-    RoomCreated = 'roomCreated',
-    RoomJoined = 'roomJoined',
-    RoomNotFound = 'roomNotFound',
-    GameStarted = 'gameStarted',
-    IncompleteSentence = 'incompleteSentence',
-    NewTurn = 'newTurn',
-    ModeChanged = 'modeChanged',
-    MovementModeStarted = 'movementModeStarted',
-    MovementModeEnded = 'movementModeEnded',
-    NewRoundStarted = 'newRoundStarted',
-    GameEnded = 'gameEnded',
-    SubmissionReceived = 'submissionReceived',
-    PlayerLeft = 'playerLeft',
-    PlayerMoved = 'playerMoved'
-}
-
-function getRandomColor(room: Room): Color {
-    const colors = Object.values(Color);
-    const pickedColors = room.players.map((player) => player.color);
-    const availableColors = colors.filter((color) => !pickedColors.includes(color));
-    const randomIndex = Math.floor(Math.random() * availableColors.length);
-    return availableColors[randomIndex];
-}
 
 io.on(SocketEvent.Connection, (socket) => {
     console.log('A user connected');
@@ -292,19 +170,78 @@ io.on(SocketEvent.Connection, (socket) => {
             io.to(room.id).emit(SocketEmit.PlayerLeft, socket.id);
         }
     });
-});
+});*/
 
+import React, { useEffect, useState } from "react";
 
-server.listen(3000, () => {
-    console.log('Server is running on port 3000');
-});
-
-// Helper function to generate a random room ID
-function generateRoomId(): string {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let roomId = '';
-    for (let i = 0; i < 6; i++) {
-        roomId += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return roomId;
+enum SocketEvent {
+  UpdateScore = "updateScore",
+  StartNewRound = "startNewRound",
+  EndGame = "endGame",
+  PlayerMovement = "playerMovement",
+  PlayerSubmission = "playerSubmission",
+  Disconnect = "disconnect",
 }
+
+enum SocketEmit {
+  NewRoundStarted = "newRoundStarted",
+  GameEnded = "gameEnded",
+  PlayerMoved = "playerMoved",
+  SubmissionReceived = "submissionReceived",
+  PlayerLeft = "playerLeft",
+}
+
+interface Player {
+  id: string;
+  score: number;
+  submission: string;
+}
+
+interface Room {
+  id: string;
+  roundNumber: number;
+  players: Player[];
+  incompleteSentence: string;
+  winner: string;
+}
+
+const WebsocketTest: React.FC = () => {
+  const [ws, setWs] = useState<WebSocket | null>(null);
+  const [rooms, setRooms] = useState<Room[]>([]);
+
+  // Connection
+  useEffect(() => {
+    const websocket = new WebSocket("ws://localhost:3000"); // replace with your server address
+    setWs(websocket);
+    return () => {
+      websocket.close();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!ws) return;
+
+    ws.onopen = () => {
+      console.log("WebSocket connected");
+    }
+
+    ws.onerror = (event) => {
+      console.error("WebSocket error:", event);
+    };
+
+    ws.onclose = (event) => {
+      console.log("WebSocket closed:", event);
+    };
+  }, [ws]);
+
+  
+  return (
+    <div>
+      <h1>Websocket Test</h1>
+      <p>Rooms: {rooms.length}</p>
+      <p>Players: {rooms.length > 0 ? rooms[0].players.length : 0}</p>
+    </div>
+  );
+};
+
+export default WebsocketTest;

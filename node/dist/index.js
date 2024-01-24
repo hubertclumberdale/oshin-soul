@@ -107,6 +107,7 @@ io.on(SocketEvent.Connection, (socket) => {
     console.log('A user connected');
     // Handle socket events for room management
     socket.on(SocketEvent.CreateRoom, () => {
+        console.log('CreateRoom event triggered in room:', socket.id);
         // Create a new room
         const roomId = generateRoomId();
         const room = {
@@ -126,6 +127,7 @@ io.on(SocketEvent.Connection, (socket) => {
         socket.emit(SocketEmit.RoomCreated, roomId);
     });
     socket.on(SocketEvent.JoinRoom, (roomId, playerName) => {
+        console.log('JoinRoom event triggered in room:', roomId);
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
             const randomColor = getRandomColor(room);
@@ -139,6 +141,7 @@ io.on(SocketEvent.Connection, (socket) => {
         }
     });
     socket.on(SocketEvent.StartGame, (roomId) => {
+        console.log('StartGame event triggered in room:', roomId);
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
             room.gameStarted = true;
@@ -146,6 +149,7 @@ io.on(SocketEvent.Connection, (socket) => {
         }
     });
     socket.on(SocketEvent.IncompleteSentence, (roomId, sentence) => {
+        console.log('IncompleteSentence event triggered in room:', roomId);
         // Notify everyone in a specific room of the incomplete sentence
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
@@ -154,6 +158,7 @@ io.on(SocketEvent.Connection, (socket) => {
         }
     });
     socket.on(SocketEvent.NextTurn, (roomId) => {
+        console.log('NextTurn event triggered in room:', roomId);
         // Start a new turn in a specific room until the game is over
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
@@ -162,6 +167,7 @@ io.on(SocketEvent.Connection, (socket) => {
         }
     });
     socket.on(SocketEvent.ChangeMode, (roomId, mode) => {
+        console.log('ChangeMode event triggered in room:', roomId);
         // Change the current mode in a specific room
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
@@ -170,6 +176,7 @@ io.on(SocketEvent.Connection, (socket) => {
         }
     });
     socket.on(SocketEvent.StartMovementMode, (roomId) => {
+        console.log('StartMovementMode event triggered in room:', roomId);
         // Notify when the movement mode starts in a specific room
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
@@ -178,6 +185,7 @@ io.on(SocketEvent.Connection, (socket) => {
         }
     });
     socket.on(SocketEvent.EndMovementMode, (roomId) => {
+        console.log('EndMovementMode event triggered in room:', roomId);
         // Notify when the movement mode ends in a specific room
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
@@ -186,6 +194,7 @@ io.on(SocketEvent.Connection, (socket) => {
         }
     });
     socket.on(SocketEvent.UpdateScore, (roomId, playerName, score) => {
+        console.log('UpdateScore event triggered in room:', roomId);
         // Update the score for a player in a specific room
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
@@ -196,6 +205,7 @@ io.on(SocketEvent.Connection, (socket) => {
         }
     });
     socket.on(SocketEvent.StartNewRound, (roomId) => {
+        console.log('StartNewRound event triggered in room:', roomId);
         // Notify that a new round has started in a specific room
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
@@ -208,6 +218,7 @@ io.on(SocketEvent.Connection, (socket) => {
         }
     });
     socket.on(SocketEvent.EndGame, (roomId) => {
+        console.log('EndGame event triggered in room:', roomId);
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
             io.to(roomId).emit(SocketEmit.GameEnded, room.winner);
@@ -217,6 +228,7 @@ io.on(SocketEvent.Connection, (socket) => {
     });
     // Handle socket events for player management
     socket.on(SocketEvent.PlayerMovement, (roomId, x, y) => {
+        console.log('PlayerMovement event triggered in room:', roomId);
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
             const player = room.players.find((p) => p.id === socket.id);
@@ -226,6 +238,7 @@ io.on(SocketEvent.Connection, (socket) => {
         }
     });
     socket.on(SocketEvent.PlayerSubmission, (roomId, submission) => {
+        console.log('PlayerSubmission event triggered in room:', roomId);
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
             const player = room.players.find((p) => p.id === socket.id);
