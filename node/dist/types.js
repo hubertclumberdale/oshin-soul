@@ -1,0 +1,61 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SocketEmit = exports.SocketEvent = exports.Color = exports.Mode = void 0;
+var Mode;
+(function (Mode) {
+    Mode["Lobby"] = "lobby";
+    Mode["Movement"] = "movement";
+    Mode["Compose"] = "compose";
+    Mode["Vote"] = "vote";
+    Mode["Win"] = "win";
+    Mode["End"] = "end";
+})(Mode || (exports.Mode = Mode = {}));
+var Color;
+(function (Color) {
+    Color["Red"] = "red";
+    Color["Blue"] = "blue";
+    Color["Green"] = "green";
+    Color["Yellow"] = "yellow";
+    Color["Orange"] = "orange";
+    Color["Purple"] = "purple";
+    Color["Pink"] = "pink";
+    Color["Brown"] = "brown";
+    Color["White"] = "white";
+    Color["Black"] = "black";
+})(Color || (exports.Color = Color = {}));
+var SocketEvent;
+(function (SocketEvent) {
+    SocketEvent["Connection"] = "connection";
+    SocketEvent["CreateRoom"] = "createRoom";
+    SocketEvent["JoinRoom"] = "joinRoom";
+    SocketEvent["StartGame"] = "startGame";
+    SocketEvent["IncompleteSentence"] = "incompleteSentence";
+    SocketEvent["NextTurn"] = "nextTurn";
+    SocketEvent["ChangeMode"] = "changeMode";
+    SocketEvent["StartMovementMode"] = "startMovementMode";
+    SocketEvent["EndMovementMode"] = "endMovementMode";
+    SocketEvent["UpdateScore"] = "updateScore";
+    SocketEvent["StartNewRound"] = "startNewRound";
+    SocketEvent["EndGame"] = "endGame";
+    SocketEvent["PlayerMovement"] = "playerMovement";
+    SocketEvent["PlayerSubmission"] = "playerSubmission";
+    SocketEvent["Disconnect"] = "disconnect";
+})(SocketEvent || (exports.SocketEvent = SocketEvent = {}));
+var SocketEmit;
+(function (SocketEmit) {
+    SocketEmit["RoomCreated"] = "roomCreated";
+    SocketEmit["RoomJoined"] = "roomJoined";
+    SocketEmit["RoomNotFound"] = "roomNotFound";
+    SocketEmit["GameStarted"] = "gameStarted";
+    SocketEmit["IncompleteSentence"] = "incompleteSentence";
+    SocketEmit["NewTurn"] = "newTurn";
+    SocketEmit["ModeChanged"] = "modeChanged";
+    SocketEmit["MovementModeStarted"] = "movementModeStarted";
+    SocketEmit["MovementModeEnded"] = "movementModeEnded";
+    SocketEmit["NewRoundStarted"] = "newRoundStarted";
+    SocketEmit["GameEnded"] = "gameEnded";
+    SocketEmit["SubmissionReceived"] = "submissionReceived";
+    SocketEmit["PlayerLeft"] = "playerLeft";
+    SocketEmit["PlayerMoved"] = "playerMoved";
+})(SocketEmit || (exports.SocketEmit = SocketEmit = {}));
+//# sourceMappingURL=types.js.map
