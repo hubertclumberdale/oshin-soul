@@ -4,7 +4,7 @@ Server
 Game Management
 
 Create the game
-Instantiate the socket and save the Unity reference
+Instantiate the WebSocket and save the Unity reference
 Add players to the game
 Listen for phone connections and save them in a list
 Start the game
@@ -27,13 +27,8 @@ Player Management
 Player movement using x, y
 Player submission
 */
-
-import express from 'express';
-import http from 'http';
-import { Server } from 'socket.io';
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
+import WebSocket from 'ws';
+const wss = new WebSocket.Server({ port: 4000 });
 
 enum Mode {
     Lobby = 'lobby',
@@ -123,18 +118,18 @@ function getRandomColor(room: Room): Color {
     return availableColors[randomIndex];
 }
 
-io.on(SocketEvent.Connection, (socket) => {
+wss.on(SocketEvent.Connection, (ws) => {
     console.log('A user connected');
 
-    // Handle socket events for room management
-    socket.on(SocketEvent.CreateRoom, () => {
-        console.log('CreateRoom event triggered in room:', socket.id);
+    // Handle WebSocket events for room management
+    ws.on(SocketEvent.CreateRoom, () => {
+        console.log('CreateRoom event triggered in room:', ws.id);
         // Create a new room
         const roomId = generateRoomId();
         const room: Room = {
             id: roomId,
             players: [],
-            unity: socket.id,
+            unity: ws.id,
             gameStarted: false,
             incompleteSentence: '',
             turns: 0,
@@ -144,97 +139,119 @@ io.on(SocketEvent.Connection, (socket) => {
             roundNumber: 0,
         };
         rooms.push(room);
-        socket.join(roomId);
-        socket.emit(SocketEmit.RoomCreated, roomId);
+        ws.send(JSON.stringify({ event: SocketEmit.RoomCreated, data: roomId }));
     });
 
-    socket.on(SocketEvent.JoinRoom, (roomId, playerName) => {
+    ws.on(SocketEvent.JoinRoom, (roomId, playerName) => {
         console.log('JoinRoom event triggered in room:', roomId);
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
             const randomColor = getRandomColor(room);
-            const player: Player = { id: socket.id, score: 0, color: randomColor, submission: '' };
+            const player: Player = { id: ws.id, score: 0, color: randomColor, submission: '' };
             room.players.push(player);
-            socket.join(roomId);
-            socket.emit(SocketEmit.RoomJoined, roomId);
+            ws.send(JSON.stringify({ event: SocketEmit.RoomJoined, data: roomId }));
         } else {
-            socket.emit(SocketEmit.RoomNotFound);
+            ws.send(JSON.stringify({ event: SocketEmit.RoomNotFound }));
         }
     });
 
 
-    socket.on(SocketEvent.StartGame, (roomId) => {
+    ws.on(SocketEvent.StartGame, (roomId) => {
         console.log('StartGame event triggered in room:', roomId);
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
             room.gameStarted = true;
-            io.to(roomId).emit(SocketEmit.GameStarted);
+            wss.clients.forEach((client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify({ event: SocketEmit.GameStarted }));
+                }
+            });
         }
     });
 
-    socket.on(SocketEvent.IncompleteSentence, (roomId, sentence) => {
+    ws.on(SocketEvent.IncompleteSentence, (roomId, sentence) => {
         console.log('IncompleteSentence event triggered in room:', roomId);
         // Notify everyone in a specific room of the incomplete sentence
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
             room.incompleteSentence = sentence;
-            io.to(roomId).emit(SocketEmit.IncompleteSentence, sentence);
+            wss.clients.forEach((client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify({ event: SocketEmit.IncompleteSentence, data: sentence }));
+                }
+            });
         }
     });
 
-    socket.on(SocketEvent.NextTurn, (roomId) => {
+    ws.on(SocketEvent.NextTurn, (roomId) => {
         console.log('NextTurn event triggered in room:', roomId);
         // Start a new turn in a specific room until the game is over
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
             room.turns++;
-            io.to(roomId).emit(SocketEmit.NewTurn, room.turns);
+            wss.clients.forEach((client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify({ event: SocketEmit.NewTurn, data: room.turns }));
+                }
+            });
         }
     });
 
-    socket.on(SocketEvent.ChangeMode, (roomId, mode) => {
+    ws.on(SocketEvent.ChangeMode, (roomId, mode) => {
         console.log('ChangeMode event triggered in room:', roomId);
         // Change the current mode in a specific room
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
             room.currentMode = mode;
-            io.to(roomId).emit(SocketEmit.ModeChanged, mode);
+            wss.clients.forEach((client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify({ event: SocketEmit.ModeChanged, data: mode }));
+                }
+            });
         }
     });
 
-    socket.on(SocketEvent.StartMovementMode, (roomId) => {
+    ws.on(SocketEvent.StartMovementMode, (roomId) => {
         console.log('StartMovementMode event triggered in room:', roomId);
         // Notify when the movement mode starts in a specific room
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
             room.playersAreMoving = true;
-            io.to(roomId).emit(SocketEmit.MovementModeStarted);
+            wss.clients.forEach((client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify({ event: SocketEmit.MovementModeStarted }));
+                }
+            });
         }
     });
 
-    socket.on(SocketEvent.EndMovementMode, (roomId) => {
+    ws.on(SocketEvent.EndMovementMode, (roomId) => {
         console.log('EndMovementMode event triggered in room:', roomId);
         // Notify when the movement mode ends in a specific room
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
             room.playersAreMoving = false
-            io.to(roomId).emit(SocketEmit.MovementModeEnded);
+            wss.clients.forEach((client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify({ event: SocketEmit.MovementModeEnded }));
+                }
+            });
         }
     });
 
-    socket.on(SocketEvent.UpdateScore, (roomId, playerName, score) => {
+    ws.on(SocketEvent.UpdateScore, (roomId, playerName, score) => {
         console.log('UpdateScore event triggered in room:', roomId);
         // Update the score for a player in a specific room
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
-            const player = room.players.find((p) => p.id === socket.id);
+            const player = room.players.find((p) => p.id === ws.id);
             if (player) {
                 player.score = score;
             }
         }
     });
 
-    socket.on(SocketEvent.StartNewRound, (roomId) => {
+    ws.on(SocketEvent.StartNewRound, (roomId) => {
         console.log('StartNewRound event triggered in room:', roomId);
         // Notify that a new round has started in a specific room
         const room = rooms.find((r) => r.id === roomId);
@@ -244,60 +261,76 @@ io.on(SocketEvent.Connection, (socket) => {
                 player.submission = "";
             });
             room.incompleteSentence = "";
-            io.to(roomId).emit(SocketEmit.NewRoundStarted, room.roundNumber);
+            wss.clients.forEach((client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify({ event: SocketEmit.NewRoundStarted, data: room.roundNumber }));
+                }
+            });
         }
     });
 
-    socket.on(SocketEvent.EndGame, (roomId) => {
+    ws.on(SocketEvent.EndGame, (roomId) => {
         console.log('EndGame event triggered in room:', roomId);
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
-            io.to(roomId).emit(SocketEmit.GameEnded, room.winner);
+            wss.clients.forEach((client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify({ event: SocketEmit.GameEnded, data: room.winner }));
+                }
+            });
         }
         // Disconnect the WebSocket connection
-        socket.disconnect();
+        ws.close();
     });
     
 
-    // Handle socket events for player management
-    socket.on(SocketEvent.PlayerMovement, (roomId, x, y) => {
+    // Handle WebSocket events for player management
+    ws.on(SocketEvent.PlayerMovement, (roomId, x, y) => {
         console.log('PlayerMovement event triggered in room:', roomId);
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
-            const player = room.players.find((p) => p.id === socket.id);
+            const player = room.players.find((p) => p.id === ws.id);
             if (player) {
-                io.to(roomId).emit(SocketEmit.PlayerMoved, player.id, x, y);
+                wss.clients.forEach((client) => {
+                    if (client.readyState === WebSocket.OPEN) {
+                        client.send(JSON.stringify({ event: SocketEmit.PlayerMoved, data: { playerId: player.id, x, y } }));
+                    }
+                });
             }
         }
     });
 
-    socket.on(SocketEvent.PlayerSubmission, (roomId, submission) => {
+    ws.on(SocketEvent.PlayerSubmission, (roomId, submission) => {
         console.log('PlayerSubmission event triggered in room:', roomId);
         const room = rooms.find((r) => r.id === roomId);
         if (room) {
-            const player = room.players.find((p) => p.id === socket.id);
+            const player = room.players.find((p) => p.id === ws.id);
             if (player) {
                 player.submission = submission;
-                io.to(socket.id).emit(SocketEmit.SubmissionReceived);
-                
+                ws.send(JSON.stringify({ event: SocketEmit.SubmissionReceived }));
             }
         }
     });
 
-    socket.on(SocketEvent.Disconnect, () => {
+    ws.on(SocketEvent.Disconnect, () => {
         console.log('A user disconnected');
-        const room = rooms.find((r) => r.players.some((p) => p.id === socket.id));
+        const room = rooms.find((r) => r.players.some((p) => p.id === ws.id));
         if (room) {
-            room.players = room.players.filter((p) => p.id !== socket.id);
-            io.to(room.id).emit(SocketEmit.PlayerLeft, socket.id);
+            room.players = room.players.filter((p) => p.id !== ws.id);
+            wss.clients.forEach((client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify({ event: SocketEmit.PlayerLeft, data: ws.id }));
+                }
+            });
         }
     });
 });
 
 
-server.listen(3000, () => {
-    console.log('Server is running on port 3000');
-});
+
+wss.on('listening', () => {
+    console.log('Node server started on on 4000')
+})
 
 // Helper function to generate a random room ID
 function generateRoomId(): string {

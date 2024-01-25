@@ -1,26 +1,36 @@
-import React from "react";
-import logo from "./logo.svg";
+import { useEffect, useState } from "react";
 import "./App.css";
-import WebsocketTest from "./components/websocket-test";
+import Lobby from "./components/lobby";
 
 function App() {
+  const [ws, setWs] = useState<WebSocket | null>(null);
+  const [gameMode, setGameMode] = useState<string>("");
+
+  useEffect(() => {
+    const websocket = new WebSocket("ws://localhost:4000");
+    setWs(websocket);
+  }, []);
+
+  useEffect(() => {
+    if (!ws) return;
+
+    ws.onopen = () => {
+      console.log("WebSocket connected");
+      setGameMode("lobby");
+    };
+
+    ws.onerror = (event) => {
+      console.error("WebSocket error:", event);
+    };
+
+    ws.onclose = (event) => {
+      console.log("WebSocket closed:", event);
+    };
+  }, [ws]);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-      <WebsocketTest></WebsocketTest>
+      {!ws && <div>Connecting to server...</div>}
+      {ws && gameMode === "lobby" && <Lobby webSocket={ws} />}
     </div>
   );
 }
