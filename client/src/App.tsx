@@ -120,9 +120,11 @@ function App() {
       <hr></hr>
       {error && <div>{error}</div>}
       {!ws && <div>Connecting to server...</div>}
-      {gameMode === Mode.Join && <Join joinRoom={joinRoom} />}
+      {<Movement onMovement={onMovement} />}
+
+     {/*  {gameMode === Mode.Join && <Join joinRoom={joinRoom} />}
       {gameMode === Mode.Lobby && <Lobby ready={ready} toggleReady={toggleReady} />}
-      {gameMode === Mode.Movement && <Movement onMovement={onMovement} />}
+      {gameMode === Mode.Movement && <Movement onMovement={onMovement} />} */}
       {/*       {gameMode === Mode.Compose && <Lobby />}
       {gameMode === Mode.Vote && <Lobby />}
       {gameMode === Mode.Win && <Lobby />}
