@@ -30,7 +30,7 @@ export interface SocketData {
 }
 
 export interface SocketMessage {
-    event: SocketEvent;
+    event: SocketEvent | SocketBroadcast;
     data?: Partial<SocketData>;
 }
 
@@ -57,33 +57,15 @@ export interface Player {
 
 
 export enum SocketEvent {
-    Connection = 'connection',
-    CreateRoom = 'createRoom',
-    JoinRoom = 'joinRoom',
-    PlayerReady = 'playerReady',
-    StartGame = 'startGame',
-    IncompleteSentence = 'incompleteSentence',
-    NextTurn = 'nextTurn',
-    ChangeMode = 'changeMode',
-    StartMovementMode = 'startMovementMode',
-    EndMovementMode = 'endMovementMode',
-    UpdateScore = 'updateScore',
-    StartNewRound = 'startNewRound',
-    EndGame = 'endGame',
-    PlayerMovement = 'playerMovement',
-    PlayerSubmission = 'playerSubmission',
-    Disconnect = 'disconnect',
-    RoomCreated = 'roomCreated',
-    RoomJoined = 'roomJoined',
-    RoomNotFound = 'roomNotFound',
-    GameStarted = 'gameStarted',
-    NewTurn = 'newTurn',
-    ModeChanged = 'modeChanged',
-    MovementModeStarted = 'movementModeStarted',
-    MovementModeEnded = 'movementModeEnded',
-    NewRoundStarted = 'newRoundStarted',
-    GameEnded = 'gameEnded',
-    SubmissionReceived = 'submissionReceived',
-    PlayerLeft = 'playerLeft',
-    PlayerMoved = 'playerMoved'
+    CreateRoom = 'create-room',
+    JoinRoom = 'join-room',
+    PlayerReady = 'player-ready',
+    GameStarted = 'game-started',
+}
+
+export enum SocketBroadcast {
+    RoomCreated = 'room-created',
+    RoomJoined = 'room-joined',
+    RoomNotFound = 'room-not-found',
+    PlayerLeft = 'player-left',
 }

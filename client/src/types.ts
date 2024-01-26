@@ -11,7 +11,7 @@ export enum Mode {
 
 // Room Management
 export interface Room {
-    id: number;
+    id: string;
     players: Player[]; // Updated to use Player interface
     unity: string
     gameStarted: boolean;
@@ -24,13 +24,13 @@ export interface Room {
 }
 
 export interface SocketData {
-    roomId: number
+    roomId: string
     ready: boolean
-    playerId: number
+    playerId: string
 }
 
 export interface SocketMessage {
-    event: SocketEvent;
+    event: SocketEvent | SocketBroadcast;
     data?: Partial<SocketData>;
 }
 
@@ -48,7 +48,7 @@ export enum Color {
 }
 
 export interface Player {
-    id: number;
+    id: string;
     score: number;
     color: Color;
     ready: boolean,
@@ -57,33 +57,16 @@ export interface Player {
 
 
 export enum SocketEvent {
-    Connection = 'connection',
-    CreateRoom = 'createRoom',
-    JoinRoom = 'joinRoom',
-    PlayerReady = 'playerReady',
-    StartGame = 'startGame',
-    IncompleteSentence = 'incompleteSentence',
-    NextTurn = 'nextTurn',
-    ChangeMode = 'changeMode',
-    StartMovementMode = 'startMovementMode',
-    EndMovementMode = 'endMovementMode',
-    UpdateScore = 'updateScore',
-    StartNewRound = 'startNewRound',
-    EndGame = 'endGame',
-    PlayerMovement = 'playerMovement',
-    PlayerSubmission = 'playerSubmission',
-    Disconnect = 'disconnect',
-    RoomCreated = 'roomCreated',
-    RoomJoined = 'roomJoined',
-    RoomNotFound = 'roomNotFound',
-    GameStarted = 'gameStarted',
-    NewTurn = 'newTurn',
-    ModeChanged = 'modeChanged',
-    MovementModeStarted = 'movementModeStarted',
-    MovementModeEnded = 'movementModeEnded',
-    NewRoundStarted = 'newRoundStarted',
-    GameEnded = 'gameEnded',
-    SubmissionReceived = 'submissionReceived',
-    PlayerLeft = 'playerLeft',
-    PlayerMoved = 'playerMoved'
+    CreateRoom = 'create-room',
+    JoinRoom = 'join-room',
+    PlayerReady = 'player-ready',
+    GameStarted = 'game-started',
+    PlayerMovement = 'player-movement',
+}
+
+export enum SocketBroadcast {
+    RoomCreated = 'room-created',
+    RoomJoined = 'room-joined',
+    RoomNotFound = 'room-not-found',
+    PlayerLeft = 'player-left',
 }

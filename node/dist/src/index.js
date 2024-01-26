@@ -66,7 +66,7 @@ wss.on('connection', (ws) => {
                     roundNumber: 0,
                 };
                 rooms.push(room);
-                ws.send(JSON.stringify({ event: types_1.SocketEvent.RoomCreated, data: { roomId } }));
+                ws.send(JSON.stringify({ event: types_1.SocketBroadcast.RoomCreated, data: { roomId } }));
                 console.log('Room created:', room);
                 break;
             }
@@ -81,12 +81,12 @@ wss.on('connection', (ws) => {
                     const player = { id: generateId(), score: 0, ready: false, color: randomColor, submission: '' };
                     room.players.push(player);
                     console.log('Player joined room:', player);
-                    const message = { event: types_1.SocketEvent.RoomJoined, data: { roomId: data.roomId, playerId: player.id } };
+                    const message = { event: types_1.SocketBroadcast.RoomJoined, data: { roomId: data.roomId, playerId: player.id } };
                     ws.send(JSON.stringify(message));
                 }
                 else {
                     console.log('Room not found');
-                    const message = { event: types_1.SocketEvent.RoomNotFound, };
+                    const message = { event: types_1.SocketBroadcast.RoomNotFound, };
                     ws.send(JSON.stringify(message));
                 }
                 break;
@@ -126,7 +126,7 @@ wss.on('connection', (ws) => {
                 }
                 else {
                     console.log('Room not found');
-                    const message = { event: types_1.SocketEvent.RoomNotFound, };
+                    const message = { event: types_1.SocketBroadcast.RoomNotFound, };
                     ws.send(JSON.stringify(message));
                 }
                 break;
@@ -143,7 +143,7 @@ wss.on('connection', (ws) => {
             room.players = room.players.filter((p) => p.id !== ws.id);
             wss.clients.forEach((client) => {
                 if (client.readyState === ws_1.default.OPEN) {
-                    client.send(JSON.stringify({ event: types_1.SocketEvent.PlayerLeft, data: ws.id }));
+                    client.send(JSON.stringify({ event: types_1.SocketBroadcast.PlayerLeft, data: ws.id }));
                 }
             });
         }

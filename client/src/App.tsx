@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import Lobby from "./components/lobby";
-import { Mode, SocketEvent } from "src/types";
+import { Mode, SocketBroadcast, SocketEvent } from "src/types";
 import Movement from "./components/movement";
 import Join from "src/components/join";
 function App() {
@@ -36,14 +36,14 @@ function App() {
     ws.onmessage = (event) => {
       const message = JSON.parse(event.data);
       switch (message.event) {
-        case SocketEvent.RoomJoined:
+        case SocketBroadcast.RoomJoined:
           console.log("Room joined", message.data.roomId);
           setRoomId(message.data.roomId);
           setPlayerId(message.data.playerId);
           setGameMode(Mode.Lobby);
 
           break;
-        case SocketEvent.RoomNotFound:
+        case SocketBroadcast.RoomNotFound:
           console.log("Room not found");
           setError("Room not found");
 
@@ -120,12 +120,14 @@ function App() {
       <hr></hr>
       {error && <div>{error}</div>}
       {!ws && <div>Connecting to server...</div>}
-      {<Movement onMovement={onMovement} />}
 
-     {/*  {gameMode === Mode.Join && <Join joinRoom={joinRoom} />}
-      {gameMode === Mode.Lobby && <Lobby ready={ready} toggleReady={toggleReady} />}
-      {gameMode === Mode.Movement && <Movement onMovement={onMovement} />} */}
-      {/*       {gameMode === Mode.Compose && <Lobby />}
+      {gameMode === Mode.Join && <Join joinRoom={joinRoom} />}
+      {gameMode === Mode.Lobby && (
+        <Lobby ready={ready} toggleReady={toggleReady} />
+      )}
+      {gameMode === Mode.Movement && <Movement onMovement={onMovement} />}
+
+      {/*  {gameMode === Mode.Compose && <Lobby />}
       {gameMode === Mode.Vote && <Lobby />}
       {gameMode === Mode.Win && <Lobby />}
       {gameMode === Mode.End && <Lobby />} */}

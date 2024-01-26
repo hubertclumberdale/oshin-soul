@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SocketEvent = exports.Color = exports.Mode = void 0;
+exports.SocketBroadcast = exports.SocketEvent = exports.Color = exports.Mode = void 0;
 var Mode;
 (function (Mode) {
     Mode["Join"] = "join";
@@ -26,34 +26,16 @@ var Color;
 })(Color || (exports.Color = Color = {}));
 var SocketEvent;
 (function (SocketEvent) {
-    SocketEvent["Connection"] = "connection";
-    SocketEvent["CreateRoom"] = "createRoom";
-    SocketEvent["JoinRoom"] = "joinRoom";
-    SocketEvent["PlayerReady"] = "playerReady";
-    SocketEvent["StartGame"] = "startGame";
-    SocketEvent["IncompleteSentence"] = "incompleteSentence";
-    SocketEvent["NextTurn"] = "nextTurn";
-    SocketEvent["ChangeMode"] = "changeMode";
-    SocketEvent["StartMovementMode"] = "startMovementMode";
-    SocketEvent["EndMovementMode"] = "endMovementMode";
-    SocketEvent["UpdateScore"] = "updateScore";
-    SocketEvent["StartNewRound"] = "startNewRound";
-    SocketEvent["EndGame"] = "endGame";
-    SocketEvent["PlayerMovement"] = "playerMovement";
-    SocketEvent["PlayerSubmission"] = "playerSubmission";
-    SocketEvent["Disconnect"] = "disconnect";
-    SocketEvent["RoomCreated"] = "roomCreated";
-    SocketEvent["RoomJoined"] = "roomJoined";
-    SocketEvent["RoomNotFound"] = "roomNotFound";
-    SocketEvent["GameStarted"] = "gameStarted";
-    SocketEvent["NewTurn"] = "newTurn";
-    SocketEvent["ModeChanged"] = "modeChanged";
-    SocketEvent["MovementModeStarted"] = "movementModeStarted";
-    SocketEvent["MovementModeEnded"] = "movementModeEnded";
-    SocketEvent["NewRoundStarted"] = "newRoundStarted";
-    SocketEvent["GameEnded"] = "gameEnded";
-    SocketEvent["SubmissionReceived"] = "submissionReceived";
-    SocketEvent["PlayerLeft"] = "playerLeft";
-    SocketEvent["PlayerMoved"] = "playerMoved";
+    SocketEvent["CreateRoom"] = "create-room";
+    SocketEvent["JoinRoom"] = "join-room";
+    SocketEvent["PlayerReady"] = "player-ready";
+    SocketEvent["GameStarted"] = "game-started";
 })(SocketEvent || (exports.SocketEvent = SocketEvent = {}));
+var SocketBroadcast;
+(function (SocketBroadcast) {
+    SocketBroadcast["RoomCreated"] = "room-created";
+    SocketBroadcast["RoomJoined"] = "room-joined";
+    SocketBroadcast["RoomNotFound"] = "room-not-found";
+    SocketBroadcast["PlayerLeft"] = "player-left";
+})(SocketBroadcast || (exports.SocketBroadcast = SocketBroadcast = {}));
 //# sourceMappingURL=types.js.map

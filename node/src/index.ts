@@ -28,7 +28,7 @@ Player movement using x, y
 Player submission
 */
 import WebSocket from 'ws';
-import { Color, Mode, Player, Room, SocketEvent, SocketMessage } from '../types';
+import { Color, Mode, Player, Room, SocketBroadcast, SocketEvent, SocketMessage } from '../types';
 const wss = new WebSocket.Server({ port: 7002 });
 
 const rooms: Room[] = [];
@@ -66,7 +66,7 @@ wss.on('connection', (ws: WebSocket) => {
                     roundNumber: 0,
                 };
                 rooms.push(room);
-                ws.send(JSON.stringify({ event: SocketEvent.RoomCreated, data: { roomId } }));
+                ws.send(JSON.stringify({ event: SocketBroadcast.RoomCreated, data: { roomId } }));
                 console.log('Room created:', room);
                 break;
             }
@@ -82,11 +82,11 @@ wss.on('connection', (ws: WebSocket) => {
                     const player: Player = { id: generateId(), score: 0, ready: false, color: randomColor, submission: '' };
                     room.players.push(player);
                     console.log('Player joined room:', player);
-                    const message: SocketMessage = { event: SocketEvent.RoomJoined, data: { roomId: data.roomId, playerId: player.id } }
+                    const message: SocketMessage = { event: SocketBroadcast.RoomJoined, data: { roomId: data.roomId, playerId: player.id } }
                     ws.send(JSON.stringify(message));
                 } else {
                     console.log('Room not found');
-                    const message: SocketMessage = { event: SocketEvent.RoomNotFound, }
+                    const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
                     ws.send(JSON.stringify(message));
                 }
                 break;
@@ -124,7 +124,7 @@ wss.on('connection', (ws: WebSocket) => {
                     }
                 } else {
                     console.log('Room not found');
-                    const message: SocketMessage = { event: SocketEvent.RoomNotFound, }
+                    const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
                     ws.send(JSON.stringify(message));
                 }
                 break;
@@ -143,7 +143,7 @@ wss.on('connection', (ws: WebSocket) => {
             room.players = room.players.filter((p) => p.id !== ws.id);
             wss.clients.forEach((client) => {
                 if (client.readyState === WebSocket.OPEN) {
-                    client.send(JSON.stringify({ event: SocketEvent.PlayerLeft, data: ws.id }));
+                    client.send(JSON.stringify({ event: SocketBroadcast.PlayerLeft, data: ws.id }));
                 }
             });
         }

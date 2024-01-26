@@ -13,7 +13,6 @@ const Movement = ({onMovement}: MovementProps) => {
     <div>
       <h1>Movement</h1>
       <Joystick size={100} move={handleMove} ></Joystick>
-
     </div>
   );
 };
