@@ -1,5 +1,5 @@
 
-export enum Mode {
+export enum Phase {
     Join = 'join',
     Lobby = 'lobby',
     Movement = 'movement',
@@ -17,7 +17,7 @@ export interface Room {
     gameStarted: boolean;
     incompleteSentence: string;
     turns: number;
-    currentMode: Mode;
+    currentMode: Phase;
     playersAreMoving: boolean;
     winner: string | null;
     roundNumber: number

@@ -108,10 +108,12 @@ wss.on('connection', (ws) => {
                                 console.log('All players are ready');
                                 room.gameStarted = true;
                                 room.currentMode = types_1.Mode.Movement;
-                                const message = { event: types_1.SocketEvent.GameStarted, data: { roomId: data.roomId } };
+                                const gameStarted = { event: types_1.SocketBroadcast.MovementPhase, data: { roomId: data.roomId } };
+                                const startTimer = { event: types_1.SocketBroadcast.StartMovementPhaseTimer, data: { roomId: data.roomId } };
                                 wss.clients.forEach((client) => {
                                     if (client.readyState === ws_1.default.OPEN) {
-                                        client.send(JSON.stringify(message));
+                                        client.send(JSON.stringify(gameStarted));
+                                        client.send(JSON.stringify(startTimer));
                                     }
                                 });
                             }
@@ -123,6 +125,50 @@ wss.on('connection', (ws) => {
                     else {
                         console.log('Player not found');
                     }
+                }
+                else {
+                    console.log('Room not found');
+                    const message = { event: types_1.SocketBroadcast.RoomNotFound, };
+                    ws.send(JSON.stringify(message));
+                }
+                break;
+            }
+            case types_1.SocketEvent.PlayerMovement: {
+                console.log('PlayerMovement event triggered in room:', data.roomId);
+                const room = rooms.find((room) => room.id == data.roomId);
+                if (room) {
+                    const player = room.players.find((player) => player.id === data.playerId);
+                    if (player) {
+                        console.log('Player found:', player);
+                        const { direction } = data;
+                        const message = { event: types_1.SocketBroadcast.PlayerMovement, data: { roomId: data.roomId, playerId: data.playerId, direction } };
+                        wss.clients.forEach((client) => {
+                            if (client.readyState === ws_1.default.OPEN) {
+                                client.send(JSON.stringify(message));
+                            }
+                        });
+                    }
+                    else {
+                        console.log('Player not found');
+                    }
+                }
+                else {
+                    console.log('Room not found');
+                    const message = { event: types_1.SocketBroadcast.RoomNotFound, };
+                    ws.send(JSON.stringify(message));
+                }
+                break;
+            }
+            case types_1.SocketEvent.MovementPhaseTimerFinished: {
+                console.log('TimerFinished event triggered in room:', data.roomId);
+                const room = rooms.find((room) => room.id == data.roomId);
+                if (room) {
+                    const message = { event: types_1.SocketBroadcast.ComposePhase, data: { roomId: data.roomId } };
+                    wss.clients.forEach((client) => {
+                        if (client.readyState === ws_1.default.OPEN) {
+                            client.send(JSON.stringify(message));
+                        }
+                    });
                 }
                 else {
                     console.log('Room not found');

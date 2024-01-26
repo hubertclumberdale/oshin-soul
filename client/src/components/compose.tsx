@@ -1,5 +1,7 @@
 const Compose = () => {
-  return <></>;
+  return <>
+    <h1>Compose</h1>
+  </>;
 };
 
 export default Compose;

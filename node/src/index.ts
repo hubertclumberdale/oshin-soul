@@ -28,7 +28,7 @@ Player movement using x, y
 Player submission
 */
 import WebSocket from 'ws';
-import { Color, Mode, Player, Room, SocketBroadcast, SocketEvent, SocketMessage } from '../types';
+import { Color, Phase, Player, Room, SocketBroadcast, SocketEvent, SocketMessage } from '../types';
 const wss = new WebSocket.Server({ port: 7002 });
 
 const rooms: Room[] = [];
@@ -60,7 +60,7 @@ wss.on('connection', (ws: WebSocket) => {
                     gameStarted: false,
                     incompleteSentence: '',
                     turns: 0,
-                    currentMode: Mode.Lobby,
+                    currentMode: Phase.Lobby,
                     playersAreMoving: false,
                     winner: null,
                     roundNumber: 0,
@@ -108,7 +108,7 @@ wss.on('connection', (ws: WebSocket) => {
                             if (allPlayersReady) {
                                 console.log('All players are ready');
                                 room.gameStarted = true;
-                                room.currentMode = Mode.Movement;
+                                room.currentMode = Phase.Movement;
                                 const gameStarted: SocketMessage = { event: SocketBroadcast.MovementPhase, data: { roomId: data.roomId } }
                                 const startTimer: SocketMessage = { event: SocketBroadcast.StartMovementPhaseTimer, data: { roomId: data.roomId } }
                                 wss.clients.forEach((client) => {

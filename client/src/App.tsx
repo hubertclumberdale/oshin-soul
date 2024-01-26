@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import Lobby from "./components/lobby";
-import { Mode, SocketBroadcast, SocketEvent } from "src/types";
+import { Phase, SocketBroadcast, SocketEvent } from "src/types";
 import Movement from "./components/movement";
 import Join from "src/components/join";
+import Compose from "src/components/compose";
 function App() {
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [gameMode, setGameMode] = useState<string>("");
@@ -22,7 +23,7 @@ function App() {
 
     ws.onopen = () => {
       console.log("WebSocket connected");
-      setGameMode(Mode.Join);
+      setGameMode(Phase.Join);
     };
 
     ws.onerror = (event) => {
@@ -40,7 +41,7 @@ function App() {
           console.log("Room joined", message.data.roomId);
           setRoomId(message.data.roomId);
           setPlayerId(message.data.playerId);
-          setGameMode(Mode.Lobby);
+          setGameMode(Phase.Lobby);
 
           break;
         case SocketBroadcast.RoomNotFound:
@@ -49,8 +50,14 @@ function App() {
 
           break;
         case SocketBroadcast.MovementPhase:
-          console.log("Game started");
-          setGameMode(Mode.Movement);
+          console.log("Movement phase started");
+          setGameMode(Phase.Movement);
+
+          break;
+
+        case SocketBroadcast.ComposePhase:
+          console.log("Compose phase started");
+          setGameMode(Phase.Compose);
 
           break;
         default:
@@ -118,7 +125,9 @@ function App() {
     ws.send(
       JSON.stringify({
         event: SocketEvent.MovementPhaseTimerFinished,
-        data: {},
+        data: {
+          roomId,
+        },
       })
     );
   }
@@ -133,14 +142,14 @@ function App() {
       {error && <div>{error}</div>}
       {!ws && <div>Connecting to server...</div>}
 
-      {gameMode === Mode.Join && <Join joinRoom={joinRoom} />}
-      {gameMode === Mode.Lobby && (
+      {gameMode === Phase.Join && <Join joinRoom={joinRoom} />}
+      {gameMode === Phase.Lobby && (
         <Lobby ready={ready} toggleReady={toggleReady} />
       )}
-      {gameMode === Mode.Movement && <Movement onMovement={onMovement} />}
+      {gameMode === Phase.Movement && <Movement onMovement={onMovement} />}
 
-      {/*  {gameMode === Mode.Compose && <Lobby />}
-      {gameMode === Mode.Vote && <Lobby />}
+       {gameMode === Phase.Compose && <Compose />}
+      {/* {gameMode === Mode.Vote && <Lobby />}
       {gameMode === Mode.Win && <Lobby />}
       {gameMode === Mode.End && <Lobby />} */}
     </div>

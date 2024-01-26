@@ -29,7 +29,8 @@ var SocketEvent;
     SocketEvent["CreateRoom"] = "create-room";
     SocketEvent["JoinRoom"] = "join-room";
     SocketEvent["PlayerReady"] = "player-ready";
-    SocketEvent["GameStarted"] = "game-started";
+    SocketEvent["PlayerMovement"] = "player-movement";
+    SocketEvent["MovementPhaseTimerFinished"] = "movement-phase-timer-finished";
 })(SocketEvent || (exports.SocketEvent = SocketEvent = {}));
 var SocketBroadcast;
 (function (SocketBroadcast) {
@@ -37,5 +38,12 @@ var SocketBroadcast;
     SocketBroadcast["RoomJoined"] = "room-joined";
     SocketBroadcast["RoomNotFound"] = "room-not-found";
     SocketBroadcast["PlayerLeft"] = "player-left";
+    SocketBroadcast["PlayerMovement"] = "player-movement";
+    SocketBroadcast["StartMovementPhaseTimer"] = "start-movement-phase-timer";
+    SocketBroadcast["MovementPhase"] = "movement-phase";
+    SocketBroadcast["ComposePhase"] = "compose-phase";
+    SocketBroadcast["VotePhase"] = "vote-phase";
+    SocketBroadcast["WinPhase"] = "win-phase";
+    SocketBroadcast["EndPhase"] = "end-phase";
 })(SocketBroadcast || (exports.SocketBroadcast = SocketBroadcast = {}));
 //# sourceMappingURL=types.js.map
