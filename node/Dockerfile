@@ -12,4 +12,4 @@ EXPOSE 7002
 
 RUN chmod +x ./docker_entrypoint.sh
 
-ENTRYPOINT ["./docker_entrypoint.sh"]
+ENTRYPOINT ["sh", "./docker_entrypoint.sh"]
