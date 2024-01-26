@@ -112,11 +112,23 @@ function App() {
     );
   };
 
+  const endMovementTimer = () => {
+    if (!ws) return;
+
+    ws.send(
+      JSON.stringify({
+        event: SocketEvent.MovementPhaseTimerFinished,
+        data: {},
+      })
+    );
+  }
+
   return (
     <div className="App">
       <h2>Utilities</h2>
       <h3>Room id: {roomId}</h3>
       <button onClick={createTestRoom}>Create Test Room </button>
+      <button onClick={endMovementTimer}>End Movement Timer</button>
       <hr></hr>
       {error && <div>{error}</div>}
       {!ws && <div>Connecting to server...</div>}
