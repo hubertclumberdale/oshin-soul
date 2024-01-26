@@ -13,7 +13,7 @@ function App() {
   const [playerId, setPlayerId] = useState<number>();
 
   useEffect(() => {
-    const websocket = new WebSocket("ws://localhost:4000");
+    const websocket = new WebSocket("ws://localhost:7002");
     setWs(websocket);
   }, []);
 

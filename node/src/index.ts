@@ -29,7 +29,7 @@ Player submission
 */
 import WebSocket from 'ws';
 import { Color, Mode, Player, Room, SocketEvent, SocketMessage } from '../types';
-const wss = new WebSocket.Server({ port: 4000 });
+const wss = new WebSocket.Server({ port: 7002 });
 
 const rooms: Room[] = [];
 

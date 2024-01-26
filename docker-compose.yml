@@ -1,0 +1,31 @@
+version: "3"
+services:
+
+  client:
+    build:
+      context: ./client/
+      dockerfile: Dockerfile
+    ports:
+      - "4002:4002"
+    volumes:
+      - ./client/:/client
+    networks:
+      - bridge
+    depends_on:
+      - websocket
+
+
+  websocket:
+    build:
+      context: ./node/
+      dockerfile: Dockerfile
+    ports:
+      - "7002:7002"
+    volumes:
+      - ./node/:/node
+    networks:
+      - bridge
+
+networks:
+  bridge:
+    driver: "bridge"

@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rm -rf dist",
     "start": "npm run clean && tsc && node dist/src/index.js",
-    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts"
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts --port 7002"
   },
   "author": "",
   "license": "ISC",
