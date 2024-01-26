@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import Lobby from "./components/lobby";
-import { Phase, SocketBroadcast, SocketEvent } from "src/types";
+import { Phase, SocketBroadcast, SocketEvent, SocketMessage } from "src/types";
 import Movement from "./components/movement";
 import Join from "src/components/join";
 import Compose from "src/components/compose";
 function App() {
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [gameMode, setGameMode] = useState<string>("");
-  const [roomId, setRoomId] = useState<number>();
+  const [roomId, setRoomId] = useState<string>();
   const [error, setError] = useState<string>("");
   const [ready, setReady] = useState<boolean>(false);
-  const [playerId, setPlayerId] = useState<number>();
+  const [playerId, setPlayerId] = useState<string>();
 
   useEffect(() => {
     const websocket = new WebSocket("ws://localhost:7002");
@@ -69,43 +69,40 @@ function App() {
   const joinRoom = (roomId: string) => {
     if (!ws) return;
 
-    ws.send(
-      JSON.stringify({
-        event: SocketEvent.JoinRoom,
-        data: {
-          roomId,
-        },
-      })
-    );
+    const message: SocketMessage = {
+      event: SocketEvent.JoinRoom,
+      data: {
+        roomId,
+      },
+    };
+    ws.send(JSON.stringify(message));
   };
 
   const toggleReady = () => {
     if (!ws) return;
-
-    ws.send(
-      JSON.stringify({
-        event: SocketEvent.PlayerReady,
-        data: {
-          ready: !ready,
-          roomId,
-          playerId,
-        },
-      })
-    );
+    const message: SocketMessage = {
+      event: SocketEvent.PlayerReady,
+      data: {
+        ready: !ready,
+        roomId,
+        playerId,
+      },
+    };
+    ws.send(JSON.stringify(message));
     setReady(!ready);
   };
 
   const onMovement = (direction: { x: number; y: number }) => {
     if (!ws) return;
-
-    ws.send(
-      JSON.stringify({
-        event: SocketEvent.PlayerMovement,
-        data: {
-          direction,
-        },
-      })
-    );
+    const message: SocketMessage = {
+      event: SocketEvent.PlayerMovement,
+      data: {
+        roomId,
+        direction,
+        playerId
+      },
+    };
+    ws.send(JSON.stringify(message));
   };
 
   const createTestRoom = () => {

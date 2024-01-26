@@ -138,7 +138,6 @@ wss.on('connection', (ws: WebSocket) => {
                 if (room) {
                     const player = room.players.find((player) => player.id === data.playerId);
                     if (player) {
-                        console.log('Player found:', player);
                         const { direction } = data
                         const message: SocketMessage = { event: SocketBroadcast.PlayerMovement, data: { roomId: data.roomId, playerId: data.playerId, direction } }
                         wss.clients.forEach((client) => {
