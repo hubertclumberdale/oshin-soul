@@ -34,7 +34,7 @@ Player submission
 */
 const ws_1 = __importDefault(require("ws"));
 const types_1 = require("../types");
-const wss = new ws_1.default.Server({ port: 4000 });
+const wss = new ws_1.default.Server({ port: 7002 });
 const rooms = [];
 function getRandomColor(room) {
     const colors = Object.values(types_1.Color);
@@ -52,7 +52,7 @@ wss.on('connection', (ws) => {
             case types_1.SocketEvent.CreateRoom: {
                 console.log('CreateRoom event triggered in room:', ws.id);
                 // Create a new room
-                const roomId = generateRoomId();
+                const roomId = generateId();
                 const room = {
                     id: roomId,
                     players: [],
@@ -66,35 +66,71 @@ wss.on('connection', (ws) => {
                     roundNumber: 0,
                 };
                 rooms.push(room);
-                ws.send(JSON.stringify({ event: types_1.SocketEmit.RoomCreated, data: roomId }));
+                ws.send(JSON.stringify({ event: types_1.SocketEvent.RoomCreated, data: { roomId } }));
+                console.log('Room created:', room);
                 break;
             }
             case types_1.SocketEvent.JoinRoom: {
                 console.log('JoinRoom event triggered in room:', data.roomId);
-                const room = rooms.find((r) => r.id === data.roomId);
+                console.log(data.roomId);
+                console.log(rooms);
+                const room = rooms.find((room) => room.id == data.roomId);
+                console.log(room);
                 if (room) {
                     const randomColor = getRandomColor(room);
-                    const player = { id: ws.id, score: 0, color: randomColor, submission: '' };
+                    const player = { id: generateId(), score: 0, ready: false, color: randomColor, submission: '' };
                     room.players.push(player);
-                    ws.send(JSON.stringify({ event: types_1.SocketEmit.RoomJoined, data: data.roomId }));
+                    console.log('Player joined room:', player);
+                    const message = { event: types_1.SocketEvent.RoomJoined, data: { roomId: data.roomId, playerId: player.id } };
+                    ws.send(JSON.stringify(message));
                 }
                 else {
-                    ws.send(JSON.stringify({ event: types_1.SocketEmit.RoomNotFound }));
+                    console.log('Room not found');
+                    const message = { event: types_1.SocketEvent.RoomNotFound, };
+                    ws.send(JSON.stringify(message));
                 }
                 break;
             }
-            case types_1.SocketEvent.StartGame:
-                console.log('StartGame event triggered in room:', data.roomId);
-                const startGameRoom = rooms.find((r) => r.id === data.roomId);
-                if (startGameRoom) {
-                    startGameRoom.gameStarted = true;
-                    wss.clients.forEach((client) => {
-                        if (client.readyState === ws_1.default.OPEN) {
-                            client.send(JSON.stringify({ event: types_1.SocketEmit.GameStarted }));
+            case types_1.SocketEvent.PlayerReady: {
+                console.log('PlayerReady event triggered in room:', data.roomId);
+                const room = rooms.find((room) => room.id == data.roomId);
+                if (room) {
+                    console.log(room.players);
+                    const player = room.players.find((player) => player.id === data.playerId);
+                    if (player) {
+                        console.log('Player found:', player);
+                        const { ready } = data;
+                        player.ready = ready;
+                        if (ready) {
+                            console.log('Player is ready:', player);
+                            const allPlayersReady = room.players.every((player) => player.ready);
+                            if (allPlayersReady) {
+                                console.log('All players are ready');
+                                room.gameStarted = true;
+                                room.currentMode = types_1.Mode.Movement;
+                                const message = { event: types_1.SocketEvent.GameStarted, data: { roomId: data.roomId } };
+                                wss.clients.forEach((client) => {
+                                    if (client.readyState === ws_1.default.OPEN) {
+                                        client.send(JSON.stringify(message));
+                                    }
+                                });
+                            }
                         }
-                    });
+                        else {
+                            console.log('Player is not ready:', player);
+                        }
+                    }
+                    else {
+                        console.log('Player not found');
+                    }
+                }
+                else {
+                    console.log('Room not found');
+                    const message = { event: types_1.SocketEvent.RoomNotFound, };
+                    ws.send(JSON.stringify(message));
                 }
                 break;
+            }
             default:
                 console.log('Unknown event:', event);
                 break;
@@ -107,7 +143,7 @@ wss.on('connection', (ws) => {
             room.players = room.players.filter((p) => p.id !== ws.id);
             wss.clients.forEach((client) => {
                 if (client.readyState === ws_1.default.OPEN) {
-                    client.send(JSON.stringify({ event: types_1.SocketEmit.PlayerLeft, data: ws.id }));
+                    client.send(JSON.stringify({ event: types_1.SocketEvent.PlayerLeft, data: ws.id }));
                 }
             });
         }
@@ -116,13 +152,7 @@ wss.on('connection', (ws) => {
 wss.on('listening', () => {
     console.log('Node server started on on 4000');
 });
-// Helper function to generate a random room ID
-function generateRoomId() {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let roomId = '';
-    for (let i = 0; i < 6; i++) {
-        roomId += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return roomId;
+function generateId() {
+    return `${Math.floor(Math.random() * 1000)}`;
 }
 //# sourceMappingURL=index.js.map
