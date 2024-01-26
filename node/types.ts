@@ -27,8 +27,13 @@ export interface SocketData {
     roomId: string
     ready: boolean
     playerId: string
+    direction: Direction
 }
 
+export interface Direction {
+    x: number
+    y: number
+}
 export interface SocketMessage {
     event: SocketEvent | SocketBroadcast;
     data?: Partial<SocketData>;
@@ -60,7 +65,8 @@ export enum SocketEvent {
     CreateRoom = 'create-room',
     JoinRoom = 'join-room',
     PlayerReady = 'player-ready',
-    GameStarted = 'game-started',
+    PlayerMovement = 'player-movement',
+    MovementPhaseTimerFinished = 'movement-phase-timer-finished',
 }
 
 export enum SocketBroadcast {
@@ -68,4 +74,12 @@ export enum SocketBroadcast {
     RoomJoined = 'room-joined',
     RoomNotFound = 'room-not-found',
     PlayerLeft = 'player-left',
+    PlayerMovement = 'player-movement',
+    StartMovementPhaseTimer = 'start-movement-phase-timer',
+    MovementPhase = 'movement-phase',
+    ComposePhase = 'compose-phase',
+    VotePhase = 'vote-phase',
+    WinPhase = 'win-phase',
+    EndPhase = 'end-phase',
+
 }
