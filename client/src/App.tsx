@@ -130,7 +130,7 @@ function App() {
         },
       })
     );
-  }
+  };
 
   return (
     <div className="App">
@@ -148,7 +148,7 @@ function App() {
       )}
       {gameMode === Phase.Movement && <Movement onMovement={onMovement} />}
 
-       {gameMode === Phase.Compose && <Compose />}
+      {gameMode === Phase.Compose && <Compose />}
       {/* {gameMode === Mode.Vote && <Lobby />}
       {gameMode === Mode.Win && <Lobby />}
       {gameMode === Mode.End && <Lobby />} */}
