@@ -48,7 +48,7 @@ function App() {
           setError("Room not found");
 
           break;
-        case SocketEvent.GameStarted:
+        case SocketBroadcast.MovementPhase:
           console.log("Game started");
           setGameMode(Mode.Movement);
 
