@@ -215,7 +215,10 @@ function App() {
               words={words}
             />
           )}
-          <VotePhase
+          
+          {/* Phase 4 - Compose */}
+          {gameMode === Phase.Vote && <>
+            <VotePhase
             choices={[
               { choice: "the quick brown fox", playerId: "123", votes: 0 },
               { choice: "jumps over the lazy dog", playerId: "232", votes: 0 },
@@ -233,9 +236,7 @@ function App() {
             onSubmit={(votes) => {
               console.log(votes);
             }}
-          />
-          {/* Phase 4 - Compose */}
-          {gameMode === Phase.Vote && <></>}
+          /></>}
         </>
       ) : (
         <div>Connecting to webSocket..</div>
