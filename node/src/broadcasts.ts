@@ -23,7 +23,7 @@ export const startLobbyPhase = (
     
     console.log('Starting lobby phase');
 
-    const message: SocketMessage = { event: SocketBroadcast.LobbyPhase, data: { roomId: room.id } };
+    const message: SocketMessage = { command: SocketBroadcast.LobbyPhase, data: { roomId: room.id } };
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(message));
@@ -48,8 +48,8 @@ export const startMovementPhase = (
         player.ready = false;
     })
 
-    const gameStarted: SocketMessage = { event: SocketBroadcast.MovementPhase, data: { roomId: room.id, sentence } }
-    const startTimer: SocketMessage = { event: SocketBroadcast.StartMovementPhaseTimer, data: { roomId: room.id } }
+    const gameStarted: SocketMessage = { command: SocketBroadcast.MovementPhase, data: { roomId: room.id, sentence } }
+    const startTimer: SocketMessage = { command: SocketBroadcast.StartMovementPhaseTimer, data: { roomId: room.id } }
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(gameStarted));
@@ -66,7 +66,7 @@ export const startComposePhase = ({
     room: Room
 }) => {
     room.currentMode = Phase.Compose;
-    const message: SocketMessage = { event: SocketBroadcast.ComposePhase, data: { roomId: room.id } }
+    const message: SocketMessage = { command: SocketBroadcast.ComposePhase, data: { roomId: room.id } }
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(message));
@@ -74,7 +74,7 @@ export const startComposePhase = ({
     });
 
     room.players.forEach((player) => {
-        const playerMessage: SocketMessage = { event: SocketBroadcast.PlayerWords, data: { roomId: room.id, playerId: player.id, words: player.words } }
+        const playerMessage: SocketMessage = { command: SocketBroadcast.PlayerWords, data: { roomId: room.id, playerId: player.id, words: player.words } }
         wss.clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {
                 client.send(JSON.stringify(playerMessage));
@@ -100,7 +100,7 @@ export const startVotePhase = ({
     room.currentMode = Phase.Vote;
     const choices = room.choices
     console.log("Sending choices to players:", choices)
-    const message: SocketMessage = { event: SocketBroadcast.VotePhase, data: { roomId: room.id, choices } }
+    const message: SocketMessage = { command: SocketBroadcast.VotePhase, data: { roomId: room.id, choices } }
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(message));
@@ -126,7 +126,7 @@ export const playerJoinedRoom = ({
 
 ) => {
     console.log('Player joined room:', player);
-    const message: SocketMessage = { event: SocketBroadcast.RoomJoined, data: { roomId, playerId: player.id } }
+    const message: SocketMessage = { command: SocketBroadcast.RoomJoined, data: { roomId, playerId: player.id } }
     ws.send(JSON.stringify(message));
 }
 
@@ -140,7 +140,7 @@ export const startWinPhase = ({
     console.log('Starting win phase');
     room.currentMode = Phase.Win;
     const winningChoice = room.choices.reduce((prev, current) => (prev.score > current.score) ? prev : current)
-    const message: SocketMessage = { event: SocketBroadcast.WinPhase, data: { roomId: room.id, winningChoice } }
+    const message: SocketMessage = { command: SocketBroadcast.WinPhase, data: { roomId: room.id, winningChoice } }
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(message));
@@ -156,7 +156,7 @@ export const startGameOverPhase = ({
 }) => {
     console.log('Game finished');
     room.currentMode = Phase.GameOver
-    const message: SocketMessage = { event: SocketBroadcast.GameOverPhase, data: { roomId: room.id, players: room.players } }
+    const message: SocketMessage = { command: SocketBroadcast.GameOverPhase, data: { roomId: room.id, players: room.players } }
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(message));

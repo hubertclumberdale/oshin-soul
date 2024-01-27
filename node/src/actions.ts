@@ -64,7 +64,7 @@ export const movePlayer = ({
     direction: Direction,
     wss: WebSocket.Server
 }) => {
-    const message: SocketMessage = { event: SocketBroadcast.PlayerMovement, data: { roomId: roomId, playerId: playerId, direction } }
+    const message: SocketMessage = { command: SocketBroadcast.PlayerMovement, data: { roomId: roomId, playerId: playerId, direction } }
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(message));

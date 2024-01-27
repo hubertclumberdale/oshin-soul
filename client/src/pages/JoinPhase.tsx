@@ -24,7 +24,7 @@ const JoinPhase = ({ ws }: JoinPhaseProps) => {
     if (!ws) return;
 
     const message: SocketMessage = {
-      event: SocketEvent.JoinRoom,
+      command: SocketEvent.JoinRoom,
       data: {
         roomId,
       },

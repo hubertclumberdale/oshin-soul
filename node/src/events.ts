@@ -49,7 +49,7 @@ export const onJoinRoom = ({
         })
     } else {
         console.log('Room not found');
-        const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
+        const message: SocketMessage = { command: SocketBroadcast.RoomNotFound, }
         ws.send(JSON.stringify(message));
     }
 }
@@ -99,7 +99,7 @@ export const onPlayerReady = (
         }
     } else {
         console.log('Room not found');
-        const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
+        const message: SocketMessage = { command: SocketBroadcast.RoomNotFound, }
         ws.send(JSON.stringify(message));
     }
 }
@@ -133,7 +133,7 @@ export const onPlayerMovement = (
         }
     } else {
         console.log('Room not found');
-        const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
+        const message: SocketMessage = { command: SocketBroadcast.RoomNotFound, }
         ws.send(JSON.stringify(message));
     }
 }
@@ -159,7 +159,7 @@ export const onMovementPhaseTimerFinished = (
         })
     } else {
         console.log('Room not found');
-        const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
+        const message: SocketMessage = { command: SocketBroadcast.RoomNotFound, }
         ws.send(JSON.stringify(message));
     }
 }
@@ -189,7 +189,7 @@ export const onPlayerPickUp = ({
         }
     } else {
         console.log('Room not found');
-        const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
+        const message: SocketMessage = { command: SocketBroadcast.RoomNotFound, }
         ws.send(JSON.stringify(message));
     }
 }
@@ -225,7 +225,7 @@ export const onPlayerChoice = (
         }
     } else {
         console.log('Room not found');
-        const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
+        const message: SocketMessage = { command: SocketBroadcast.RoomNotFound, }
         ws.send(JSON.stringify(message));
     }
 }
@@ -282,7 +282,7 @@ export const onComposePhaseTimerFinished = (
         })
     } else {
         console.log('Room not found');
-        const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
+        const message: SocketMessage = { command: SocketBroadcast.RoomNotFound, }
         ws.send(JSON.stringify(message));
     }
 }
@@ -318,7 +318,7 @@ export const onVoteSubmitted = (
         }
     } else {
         console.log('Room not found');
-        const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
+        const message: SocketMessage = { command: SocketBroadcast.RoomNotFound, }
         ws.send(JSON.stringify(message));
     }
 }
@@ -349,7 +349,7 @@ export const onVotePhaseTimerFinished = (
         })
     } else {
         console.log('Room not found');
-        const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
+        const message: SocketMessage = { command: SocketBroadcast.RoomNotFound, }
         ws.send(JSON.stringify(message));
     }
 }
@@ -393,7 +393,7 @@ export const onPlayerReadyForNextRound = (
         }
     } else {
         console.log('Room not found');
-        const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
+        const message: SocketMessage = { command: SocketBroadcast.RoomNotFound, }
         ws.send(JSON.stringify(message));
     }
 
@@ -427,7 +427,7 @@ export const onNewGame = (
         })
     } else {
         console.log('Room not found');
-        const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
+        const message: SocketMessage = { command: SocketBroadcast.RoomNotFound, }
         ws.send(JSON.stringify(message));
     }
 }

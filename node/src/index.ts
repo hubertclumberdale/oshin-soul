@@ -39,7 +39,7 @@ wss.on('connection', (ws: WebSocket) => {
     console.log('A user connected');
 
     ws.on('message', (message: string) => {
-        const { event, data } = JSON.parse(message) as SocketMessage;
+        const { command: event, data } = JSON.parse(message) as SocketMessage;
         console.log('Received event:', event, 'with data:', data);
 
         switch (event) {

@@ -49,7 +49,7 @@ export interface Direction {
     y: number
 }
 export interface SocketMessage {
-    event: SocketEvent | SocketBroadcast;
+    command: SocketEvent | SocketBroadcast;
     data?: Partial<SocketData>;
 }
 

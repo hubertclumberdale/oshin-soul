@@ -57,8 +57,8 @@ function App() {
 
     ws.onmessage = (event) => {
       const message = JSON.parse(event.data) as SocketMessage;
-      if (!message.event || !message.data) return;
-      switch (message.event) {
+      if (!message.command || !message.data) return;
+      switch (message.command) {
         case SocketBroadcast.RoomCreated:
           console.log("Room created", message.data.roomId);
           setRoomId(message.data.roomId);
@@ -151,7 +151,7 @@ function App() {
   const toggleReady = () => {
     if (!ws) return;
     const message: SocketMessage = {
-      event: SocketEvent.PlayerReady,
+      command: SocketEvent.PlayerReady,
       data: {
         ready: !ready,
         roomId,
@@ -165,7 +165,7 @@ function App() {
   const onMovement = (direction: { x: number; y: number }) => {
     if (!ws) return;
     const message: SocketMessage = {
-      event: SocketEvent.PlayerMovement,
+      command: SocketEvent.PlayerMovement,
       data: {
         roomId,
         direction,
@@ -191,7 +191,7 @@ function App() {
   const onSentenceSubmit = (sentence: string) => {
     if (!ws) return;
     const message: SocketMessage = {
-      event: SocketEvent.PlayerChoice,
+      command: SocketEvent.PlayerChoice,
       data: {
         roomId,
         playerId,
@@ -207,7 +207,7 @@ function App() {
     const packs = ["animals", "jail", "holy", "napoletano", "slurs"];
     const randomChosenPack = packs[Math.floor(Math.random() * packs.length)];
     const message: SocketMessage = {
-      event: SocketEvent.PlayerPickUp,
+      command: SocketEvent.PlayerPickUp,
       data: {
         roomId,
         playerId,
@@ -220,7 +220,7 @@ function App() {
   const onVotesSubmit = (votes: Votes) => {
     if (!ws) return;
     const message: SocketMessage = {
-      event: SocketEvent.VoteSubmitted,
+      command: SocketEvent.VoteSubmitted,
       data: {
         roomId,
         playerId,
@@ -233,7 +233,7 @@ function App() {
   const onReadyForNextRound = () => {
     if (!ws) return;
     const message: SocketMessage = {
-      event: SocketEvent.ReadyForNextRound,
+      command: SocketEvent.ReadyForNextRound,
       data: {
         roomId,
         playerId,
