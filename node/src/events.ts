@@ -30,6 +30,7 @@ export const onCreateRoom = ({
 
 export const onJoinRoom = ({
     ws,
+    wss,
     rooms,
     data
 }: {
@@ -50,6 +51,7 @@ export const onJoinRoom = ({
 
         playerJoinedRoom({
             ws,
+            wss,
             roomId: data.roomId,
             player: newPlayer
         })

@@ -116,10 +116,12 @@ export const startVotePhase = ({
 
 export const playerJoinedRoom = ({
     ws,
+    wss,
     roomId,
     player,
 }: {
     ws: WebSocket,
+    wss: WebSocket.Server,
     roomId: string,
     player: Player
 }
@@ -127,7 +129,11 @@ export const playerJoinedRoom = ({
 ) => {
     console.log('Player joined room:', player);
     const message: SocketMessage = { command: SocketBroadcast.RoomJoined, data: { roomId, playerId: player.id } }
-    ws.send(JSON.stringify(message));
+    wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify(message));
+        }
+    })
 }
 
 export const startWinPhase = ({

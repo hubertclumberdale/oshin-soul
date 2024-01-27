@@ -62,11 +62,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void InstantiatePlayer()
+    public void InstantiatePlayer(string playerId)
     {
         GameObject player = Instantiate(playerPrefab) as GameObject;
         player.transform.position = GameObject.Find("SpawnPoint").transform.position;
-
+        player.GetComponent<PlayerManager>().playerId = playerId;
     }
 
     public void MovePlayer(string roomId, string playerId, Direction direction)

@@ -80,6 +80,9 @@ public class WebsocketManager : MonoBehaviour
         if(socketMessage.command.ToString() == "movement-phase"){
             _actions.Enqueue(() => SetGameMode("movement-phase"));
         }
+        if(socketMessage.command.ToString() == "room-joined"){
+            _actions.Enqueue(() => AddPlayer(socketMessage.data.playerId));
+        }
 
         if(socketMessage.command.ToString() == "start-movement-phase-timer"){
             _actions.Enqueue(() => StartMovementPhaseTimer());
@@ -105,6 +108,11 @@ public class WebsocketManager : MonoBehaviour
     private void SetRoomId(string roomId){
         Debug.Log("Setting room id to: " + roomId);
         this.roomId = roomId;
+    }
+
+    private void AddPlayer(string playerId){
+        Debug.Log("Adding player: " + playerId);
+        gameManager.InstantiatePlayer(playerId);
     }
     
     private void StartMovementPhaseTimer(){

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    public int ID = 0;
+    public string playerId = "-1";
     public float speed = 5f; // Velocità del giocatore
     public Vector2 inputVector; // Input per il movimento
 
