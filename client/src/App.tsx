@@ -217,6 +217,18 @@ function App() {
     ws.send(JSON.stringify(message));
   };
 
+  const onReadyForNextRound = () => {
+    if (!ws) return;
+    const message: SocketMessage = {
+      event: SocketEvent.ReadyForNextRound,
+      data: {
+        roomId,
+        playerId,
+      },
+    };
+    ws.send(JSON.stringify(message));
+  };
+
   return (
     <Box
       sx={{
@@ -274,7 +286,10 @@ function App() {
           {/* Phase 5 - Win */}
           {gameMode === Phase.Win && (
             <>
-              <WinPhase winningChoice={winningChoice} />
+              <WinPhase
+                winningChoice={winningChoice}
+                onReadyForNextRound={onReadyForNextRound}
+              />
             </>
           )}
 

@@ -1,14 +1,16 @@
 import { Choice } from "src/types";
 
 interface WinPhaseProps {
-    winningChoice?: Choice
+  winningChoice?: Choice;
+  onReadyForNextRound: () => void;
 }
 
-const WinPhase = ({winningChoice}: WinPhaseProps) => {
+const WinPhase = ({ winningChoice, onReadyForNextRound }: WinPhaseProps) => {
   return (
     <div>
       <h1>Win Phase</h1>
       <h3>{winningChoice?.choice}</h3>
+      <button onClick={onReadyForNextRound}>Next Round</button>
     </div>
   );
 };

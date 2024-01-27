@@ -10,9 +10,13 @@ export const startLobbyPhase = (
         room: Room
     }
 ) => {
-    console.log('Starting lobby phase')
+    room.players.forEach((player) => {
+        player.ready = false;
+    });
+
+    console.log('Starting lobby phase');
     room.currentMode = Phase.Lobby;
-    const message: SocketMessage = { event: SocketBroadcast.LobbyPhase, data: { roomId: room.id } }
+    const message: SocketMessage = { event: SocketBroadcast.LobbyPhase, data: { roomId: room.id } };
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(message));
@@ -34,6 +38,10 @@ export const startMovementPhase = (
     console.log('Starting movement phase')
     room.gameStarted = true;
     room.currentMode = Phase.Movement;
+    room.players.forEach((player) => {
+        player.ready = false;
+    })
+
     const gameStarted: SocketMessage = { event: SocketBroadcast.MovementPhase, data: { roomId: room.id, sentence } }
     const startTimer: SocketMessage = { event: SocketBroadcast.StartMovementPhaseTimer, data: { roomId: room.id } }
     wss.clients.forEach((client) => {
@@ -127,6 +135,22 @@ export const startWinPhase = ({
     room.currentMode = Phase.Win;
     const winningChoice = room.choices.reduce((prev, current) => (prev.score > current.score) ? prev : current)
     const message: SocketMessage = { event: SocketBroadcast.WinPhase, data: { roomId: room.id, winningChoice } }
+    wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify(message));
+        }
+    });
+}
+export const startGameOverPhase = ({
+    wss,
+    room
+}: {
+    wss: WebSocket.Server,
+    room: Room
+}) => {
+    console.log('Game finished');
+    room.currentMode = Phase.GameOver
+    const message: SocketMessage = { event: SocketBroadcast.GameOverPhase, data: { roomId: room.id, players: room.players } }
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(message));

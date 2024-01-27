@@ -29,7 +29,7 @@ Player submission
 */
 import WebSocket from 'ws';
 import { Room, SocketEvent, SocketMessage } from '../types';
-import { onComposePhaseTimerFinished, onCreateRoom, onJoinRoom, onMovementPhaseTimerFinished, onPlayerChoice, onPlayerDisconnected, onPlayerMovement, onPlayerPickUp, onPlayerReady, onVotePhaseTimerFinished, onVoteSubmitted } from './events';
+import { onComposePhaseTimerFinished, onCreateRoom, onJoinRoom, onMovementPhaseTimerFinished, onNewGame, onPlayerChoice, onPlayerDisconnected, onPlayerMovement, onPlayerPickUp, onPlayerReady, onPlayerReadyForNextRound, onVotePhaseTimerFinished, onVoteSubmitted } from './events';
 const wss = new WebSocket.Server({ port: 7002 });
 
 const rooms: Room[] = [];
@@ -141,6 +141,27 @@ wss.on('connection', (ws: WebSocket) => {
                 })
                 break;
             }
+
+            case SocketEvent.ReadyForNextRound: {
+                onPlayerReadyForNextRound({
+                    ws,
+                    wss,
+                    rooms,
+                    data
+                })
+                break;
+            }
+
+            case SocketEvent.NewGame: {
+                onNewGame({
+                    ws,
+                    wss,
+                    rooms,
+                    data
+                })
+                break;
+            }
+
 
             default:
                 console.log('Unknown event:', event);

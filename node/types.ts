@@ -44,6 +44,7 @@ export interface SocketData {
     choices: Choice[]
     votes: Votes
     winningChoice: Choice
+    players: Player[]
 }
 
 export interface Direction {
@@ -89,6 +90,8 @@ export enum SocketEvent {
     ComposePhaseTimerFinished = 'compose-phase-timer-finished',
     VoteSubmitted = 'vote-submitted',
     VotePhaseTimerFinished = 'vote-phase-timer-finished',
+    ReadyForNextRound = 'ready-for-next-round',
+    NewGame = 'new-game',
 }
 
 export enum SocketBroadcast {
