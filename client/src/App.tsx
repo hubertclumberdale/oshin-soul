@@ -16,6 +16,7 @@ function App() {
   const [ready, setReady] = useState<boolean>(false);
   const [playerId, setPlayerId] = useState<string>();
   const [sentence, setSentence] = useState<string>("");
+  const [words, setWords] = useState<string[]>([]);
 
   // TODO error handling
   // const [error, setError] = useState<string>("");
@@ -78,6 +79,15 @@ function App() {
           setGameMode(Phase.Compose);
 
           break;
+
+        case SocketBroadcast.PlayerWords:
+          console.log("Player words received");
+          console.log(message.data.words);
+          const words = message.data.words;
+          if(words){
+            setWords(words);
+          }
+          break;
         default:
           break;
       }
@@ -139,16 +149,19 @@ function App() {
 
   const addPackToPlayer = () => {
     if (!ws) return;
+
+    const packs = ['animals', 'jail', 'holy', 'napoletano', 'slurs']
+    const randomChosenPack = packs[Math.floor(Math.random() * packs.length)];
     const message: SocketMessage = {
       event: SocketEvent.PlayerPickUp,
       data: {
         roomId,
         playerId,
-        obtainedPack: 'animals'
+        obtainedPack: randomChosenPack,
       },
     };
     ws.send(JSON.stringify(message));
-  }
+  };
 
   return (
     <Box
@@ -192,7 +205,7 @@ function App() {
             <ComposePhase
               onSubmit={onSentenceSubmit}
               sentence={sentence}
-              words={["fuck", "ass", "dead", "fox", "dog", "pope"]}
+              words={words}
             />
           )}
         </>

@@ -2,6 +2,7 @@ import WebSocket from 'ws'
 import { Color, Direction, Phase, Player, Room, SocketBroadcast, SocketMessage } from "../types";
 import { questions } from "../config/questions";
 import { packs } from '../config/packs';
+import { maxNumberOfWordsPickedUpPerPack } from '../config/game';
 
 function generateId(): string {
     return `${Math.floor(Math.random() * 1000)}`
@@ -85,27 +86,46 @@ export const chooseSentence = ({
 }
 
 export const addWordsToPlayer = ({ obtainedPack, player }: { obtainedPack: string, player: Player }) => {
+    console.log("obtained pack", obtainedPack)
     const words = getWordsFromPack({ obtainedPack })
-    console.log(words)
+    console.log("words", words)
     player.words.push(...words);
+    shuffleArray(player.words);
+}
+
+const shuffleArray = (array: any[]) => {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
 }
 
 const getWordsFromPack = ({ obtainedPack }: { obtainedPack: string }) => {
     const pack = packs.find((pack) =>
         pack.type === obtainedPack);
     if (pack) {
-        const randomNouns = getRandomWords({ words: pack.nouns });
-        const randomVerbs = getRandomWords({ words: pack.verbs });
+        const randomNouns = getRandomUniqueWords({ words: pack.nouns });
+        console.log("random nouns", randomNouns)
+        const randomVerbs = getRandomUniqueWords({ words: pack.verbs });
+        console.log("random verbs", randomVerbs)
         return [...randomNouns, ...randomVerbs];
     }
 }
 
-const getRandomWords = ({ words }: { words: string[] }) => {
+const getRandomUniqueWords = ({ words }: { words: string[] }) => {
     const randomWords: string[] = [];
-    for (let i = 0; i < 5; i++) {
+
+    const getRandomWord = () => {
         const randomIndex = Math.floor(Math.random() * words.length);
         const randomWord = words[randomIndex];
-        randomWords.push(randomWord);
+        if (!randomWords.includes(randomWord)) {
+            randomWords.push(randomWord);
+        }
+    };
+
+    for (let i = 0; i < maxNumberOfWordsPickedUpPerPack; i++) {
+        getRandomWord();
     }
+
     return randomWords;
 }
