@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,7 +8,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject playerPrefab;
     public WebsocketManager websocketManager;
-    private GameObject[] players;
+    private List<GameObject> players = new List<GameObject>();
+
     public int timerDuration;
     public string gameMode;
 
@@ -67,12 +68,20 @@ public class GameManager : MonoBehaviour
         GameObject player = Instantiate(playerPrefab) as GameObject;
         player.transform.position = GameObject.Find("SpawnPoint").transform.position;
         player.GetComponent<PlayerManager>().playerId = playerId;
+        players.Add(player);
     }
 
-    public void MovePlayer(string roomId, string playerId, Direction direction)
+    public void MovePlayer(string roomId, string playerId, float x, float y)
     {
-        Debug.Log("Moving player: " + playerId + " in room: " + roomId + " in direction: " + direction.x + ", " + direction.y);
-        
+        Debug.Log("Moving player: " + playerId + " in room: " + roomId + " in direction: " + x + ", " + y);
+        // TODO: find player by id and move it
+        foreach (GameObject player in players)
+        {
+            if (player.GetComponent<PlayerManager>().playerId == playerId)
+            {
+                player.GetComponent<PlayerManager>().inputVector = new Vector2(x, y);
+            }
+        }
     }
 
 }

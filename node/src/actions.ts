@@ -1,5 +1,5 @@
 import WebSocket from 'ws'
-import { Color, Direction, Phase, Player, Room, SocketBroadcast, SocketMessage, Votes } from "../types";
+import { Color, Phase, Player, Room, SocketBroadcast, SocketMessage, Votes } from "../types";
 import { questions } from "../config/questions";
 import { packs } from '../config/packs';
 import { maxNumberOfWordsPickedUpPerPack } from '../config/game';
@@ -56,17 +56,20 @@ export const addNewPlayer = ({
 export const movePlayer = ({
     roomId,
     playerId,
-    direction,
+    x,
+    y,
     wss
 }: {
     roomId: string,
     playerId: string,
-    direction: Direction,
+    x: number,
+    y: number,
     wss: WebSocket.Server
 }) => {
-    const message: SocketMessage = { command: SocketBroadcast.PlayerMovement, data: { roomId: roomId, playerId: playerId, direction } }
+    const message: SocketMessage = { command: SocketBroadcast.PlayerMovement, data: { roomId: roomId, playerId: playerId, x, y } }
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
+            console.log("sending movement message", message)
             client.send(JSON.stringify(message));
         }
     });

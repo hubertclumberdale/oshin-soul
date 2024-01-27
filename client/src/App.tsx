@@ -162,13 +162,15 @@ function App() {
     setReady(!ready);
   };
 
-  const onMovement = (direction: { x: number; y: number }) => {
+  const onMovement = (direction: { x: string; y: string }) => {
+    const { x, y } = direction;
     if (!ws) return;
     const message: SocketMessage = {
       command: SocketEvent.PlayerMovement,
       data: {
         roomId,
-        direction,
+        x,
+        y,
         playerId,
       },
     };

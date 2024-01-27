@@ -129,11 +129,12 @@ export const onPlayerMovement = (
     if (room) {
         const player = room.players.find((player) => player.id === data.playerId);
         if (player) {
-            const { direction } = data
+            const { x, y } = data
             movePlayer({
                 roomId: data.roomId,
                 playerId: data.playerId,
-                direction,
+                x,
+                y,
                 wss
             })
         } else {

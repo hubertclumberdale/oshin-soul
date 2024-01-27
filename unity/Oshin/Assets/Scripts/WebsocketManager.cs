@@ -8,7 +8,8 @@ using System.Collections.Concurrent;
 class SocketData {
     public string roomId;
     public string playerId;
-    public Direction direction;
+    public float x;
+    public float y;
 }
 
 [System.Serializable]
@@ -89,7 +90,12 @@ public class WebsocketManager : MonoBehaviour
         }
 
         if(socketMessage.command.ToString() == "player-movement"){
-            _actions.Enqueue(() => MovePlayer(socketMessage.data.roomId, socketMessage.data.playerId, socketMessage.data.direction));
+            Debug.Log("Room id: " + socketMessage.data.roomId);
+            Debug.Log("Player id"+ socketMessage.data.playerId);
+            Debug.Log("Player x: " + socketMessage.data.x);
+            Debug.Log("Player y: " + socketMessage.data.y);
+
+            _actions.Enqueue(() => MovePlayer(socketMessage.data.roomId, socketMessage.data.playerId, socketMessage.data.x, socketMessage.data.y));
         }
 
         if(socketMessage.command.ToString() == "start-compose-phase-timer"){
@@ -127,9 +133,9 @@ public class WebsocketManager : MonoBehaviour
         gameManager.StartVotePhaseTimer();
     }
 
-    private void MovePlayer(string roomId, string playerId, Direction direction){
-        Debug.Log("Moving player: " + playerId + " in room: " + roomId + " in direction: " + direction.x + ", " + direction.y);
-        gameManager.MovePlayer(roomId, playerId, direction);
+    private void MovePlayer(string roomId, string playerId, float x, float y){
+        Debug.Log("Moving player: " + playerId + " in room: " + roomId + " in direction: " + x + ", " + y);
+        gameManager.MovePlayer(roomId, playerId, x, y);
     }
 
     public void SendMovementPhaseTimerEnded(){

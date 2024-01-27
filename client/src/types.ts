@@ -19,7 +19,7 @@ export interface Choice {
 // Room Management
 export interface Room {
     id: string;
-    players: Player[]; // Updated to use Player interface
+    players: Player[];
     unity: string
     incompleteSentence: string;
     currentMode: Phase;
@@ -32,7 +32,8 @@ export interface SocketData {
     roomId: string
     ready: boolean
     playerId: string
-    direction: Direction
+    x: string
+    y: string
     choice: string
     sentence: string
     obtainedPack: string
@@ -42,11 +43,6 @@ export interface SocketData {
     votes: Votes
     winningChoice: Choice
     players: Player[]
-}
-
-export interface Direction {
-    x: number
-    y: number
 }
 export interface SocketMessage {
     command: SocketEvent | SocketBroadcast;
@@ -73,7 +69,6 @@ export interface Player {
     ready: boolean,
     words: string[]
     voted: boolean
-
 }
 
 
@@ -108,5 +103,4 @@ export enum SocketBroadcast {
     PlayerWords = 'player-words',
     StartComposePhaseTimer = 'start-compose-phase-timer',
     StartVotePhaseTimer = 'start-vote-phase-timer',
-
 }
