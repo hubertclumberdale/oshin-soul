@@ -1,5 +1,5 @@
 import WebSocket from 'ws'
-import { Color, Direction, Phase, Player, Room, SocketBroadcast, SocketMessage } from "../types";
+import { Color, Direction, Phase, Player, Room, SocketBroadcast, SocketMessage, Votes } from "../types";
 import { questions } from "../config/questions";
 import { packs } from '../config/packs';
 import { maxNumberOfWordsPickedUpPerPack } from '../config/game';
@@ -51,7 +51,7 @@ export const addNewPlayer = ({
     room: Room
 }) => {
     const randomColor = getRandomColor(room);
-    const player: Player = { id: generateId(), score: 0, ready: false, color: randomColor, words: [] };
+    const player: Player = { id: generateId(), score: 0, ready: false, color: randomColor, words: [], voted: false };
     room.players.push(player);
     return player
 }
@@ -130,4 +130,13 @@ const getRandomUniqueWords = ({ words }: { words: string[] }) => {
     }
 
     return randomWords;
+}
+
+export const assignVotesToChoices = ({ room, votes }: { room: Room, votes: Votes }) => {
+    Object.entries(votes).forEach(([playerId, vote]) => {
+        const choice = room.choices.find((choice) => choice.playerId === playerId);
+        if (choice) {
+            choice.score += vote;
+        }
+    });
 }

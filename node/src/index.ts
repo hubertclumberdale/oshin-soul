@@ -29,7 +29,7 @@ Player submission
 */
 import WebSocket from 'ws';
 import { Room, SocketEvent, SocketMessage } from '../types';
-import { onCreateRoom, onJoinRoom, onMovementPhaseTimerFinished, onPlayerChoice, onPlayerDisconnected, onPlayerMovement, onPlayerPickUp, onPlayerReady } from './events';
+import { onComposePhaseTimerFinished, onCreateRoom, onJoinRoom, onMovementPhaseTimerFinished, onPlayerChoice, onPlayerDisconnected, onPlayerMovement, onPlayerPickUp, onPlayerReady, onVotePhaseTimerFinished, onVoteSubmitted } from './events';
 const wss = new WebSocket.Server({ port: 7002 });
 
 const rooms: Room[] = [];
@@ -93,6 +93,16 @@ wss.on('connection', (ws: WebSocket) => {
                 break;
             }
 
+            case SocketEvent.PlayerPickUp: {
+                onPlayerPickUp({
+                    ws,
+                    wss,
+                    rooms,
+                    data
+                })
+                break;
+            }
+
             case SocketEvent.PlayerChoice: {
                 onPlayerChoice({
                     ws,
@@ -103,8 +113,8 @@ wss.on('connection', (ws: WebSocket) => {
                 break;
             }
 
-            case SocketEvent.PlayerPickUp: {
-                onPlayerPickUp({
+            case SocketEvent.ComposePhaseTimerFinished: {
+                onComposePhaseTimerFinished({
                     ws,
                     wss,
                     rooms,
@@ -112,6 +122,28 @@ wss.on('connection', (ws: WebSocket) => {
                 })
                 break;
             }
+            case SocketEvent.VoteSubmitted: {
+                onVoteSubmitted({
+                    ws,
+                    wss,
+                    rooms,
+                    data
+                })
+                break;
+            }
+
+            case SocketEvent.VotePhaseTimerFinished: {
+                onVotePhaseTimerFinished({
+                    ws,
+                    wss,
+                    rooms,
+                    data
+                })
+                break;
+            }
+
+
+
 
             default:
                 console.log('Unknown event:', event);

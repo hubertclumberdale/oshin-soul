@@ -9,10 +9,12 @@ export enum Phase {
     End = 'end',
 }
 
+export type Votes = Record<string, number>
+
 export interface Choice {
     playerId: string
     choice: string
-    votes: number
+    score: number
 }
 // Room Management
 export interface Room {
@@ -40,6 +42,8 @@ export interface SocketData {
     words: string[]
     roundNumber: number
     choices: Choice[]
+    votes: Votes
+    winningChoice: Choice
 }
 
 export interface Direction {
@@ -70,6 +74,7 @@ export interface Player {
     color: Color;
     ready: boolean,
     words: string[]
+    voted: boolean
 }
 
 
@@ -81,6 +86,9 @@ export enum SocketEvent {
     MovementPhaseTimerFinished = 'movement-phase-timer-finished',
     PlayerChoice = 'player-choice',
     PlayerPickUp = 'player-pick-up',
+    ComposePhaseTimerFinished = 'compose-phase-timer-finished',
+    VoteSubmitted = 'vote-submitted',
+    VotePhaseTimerFinished = 'vote-phase-timer-finished',
 }
 
 export enum SocketBroadcast {
@@ -90,11 +98,13 @@ export enum SocketBroadcast {
     PlayerLeft = 'player-left',
     PlayerMovement = 'player-movement',
     StartMovementPhaseTimer = 'start-movement-phase-timer',
+    LobbyPhase = 'lobby-phase',
     MovementPhase = 'movement-phase',
     ComposePhase = 'compose-phase',
     VotePhase = 'vote-phase',
     WinPhase = 'win-phase',
     EndPhase = 'end-phase',
     PlayerWords = 'player-words',
-
+    StartComposePhaseTimer = 'start-compose-phase-timer',
+    StartVotePhaseTimer = 'start-vote-phase-timer',
 }

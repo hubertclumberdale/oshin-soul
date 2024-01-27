@@ -1,8 +1,9 @@
 import WebSocket from 'ws';
 
 import { Phase, Room, SocketBroadcast, SocketData, SocketMessage } from "../types";
-import { playerJoinedRoom, startComposePhase, startMovementPhase, startVotePhase } from './broadcasts';
-import { chooseSentence, addNewPlayer, createRoom, movePlayer, addWordsToPlayer } from './actions';
+import { playerJoinedRoom, startComposePhase, startMovementPhase, startVotePhase, startWinPhase } from './broadcasts';
+import { chooseSentence, addNewPlayer, createRoom, movePlayer, addWordsToPlayer, assignVotesToChoices } from './actions';
+import { numberOfRounds } from '../config/game';
 
 export const onCreateRoom = ({
     ws,
@@ -211,7 +212,7 @@ export const onPlayerChoice = (
         room.choices.push({
             playerId: data.playerId,
             choice: data.choice,
-            votes: 0
+            score: 0
         });
         console.log('Room choices:', room.choices);
         const allPlayersVoted = room.choices.length === room.players.length;
@@ -248,5 +249,99 @@ export const onPlayerDisconnected = (
                 client.send(JSON.stringify({ event: SocketBroadcast.PlayerLeft, data: ws.id }));
             }
         });
+    }
+}
+
+export const onComposePhaseTimerFinished = (
+    {
+        ws,
+        wss,
+        rooms,
+        data
+    }: {
+        ws: WebSocket,
+        wss: WebSocket.Server,
+        rooms: Room[]
+        data: Partial<SocketData>
+    }
+) => {
+    console.log('TimerFinished event triggered in room:', data.roomId);
+    const room = rooms.find((room) => room.id == data.roomId);
+    if (room) {
+        startVotePhase({
+            wss,
+            room
+        })
+    } else {
+        console.log('Room not found');
+        const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
+        ws.send(JSON.stringify(message));
+    }
+}
+
+export const onVoteSubmitted = (
+    {
+        ws,
+        wss,
+        rooms,
+        data
+    }: {
+        ws: WebSocket,
+        wss: WebSocket.Server,
+        rooms: Room[]
+        data: Partial<SocketData>
+    }
+) => {
+    console.log('VoteSubmitted event triggered in room:', data.roomId);
+    const room = rooms.find((room) => room.id == data.roomId);
+    if (room) {
+        assignVotesToChoices({
+            room,
+            votes: data.votes
+        })
+        const currentPlayer = room.players.find((player) => player.id === data.playerId);
+        currentPlayer.voted = true
+        const allPlayersVoted = room.players.every((player) => player.voted);
+        if (allPlayersVoted) {
+            startWinPhase({
+                wss,
+                room
+            })
+        }
+    } else {
+        console.log('Room not found');
+        const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
+        ws.send(JSON.stringify(message));
+    }
+}
+
+export const onVotePhaseTimerFinished = (
+    {
+        ws,
+        wss,
+        rooms,
+        data
+    }: {
+        ws: WebSocket,
+        wss: WebSocket.Server,
+        rooms: Room[]
+        data: Partial<SocketData>
+    }
+) => {
+    console.log('TimerFinished event triggered in room:', data.roomId);
+    const room = rooms.find((room) => room.id == data.roomId);
+    if (room) {
+        assignVotesToChoices({
+            room,
+            votes: data.votes
+        })
+        startWinPhase({
+            wss,
+            room,
+        })
+    } else {
+        console.log('Room not found');
+        const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
+        ws.send(JSON.stringify(message));
     }
 }

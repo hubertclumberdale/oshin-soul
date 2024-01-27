@@ -1,16 +1,16 @@
 import { Box, Button, IconButton, Card } from "@mui/joy";
 import { useState } from "react";
-import { Choice } from "src/types";
 import thumbUp from "src/asset/thumb-up.png";
 import thumbDown from "src/asset/thumb-down.png";
 import { useEffect } from "react";
+import { Choice, Votes } from "src/types";
 
 interface VotePhaseProps {
   choices: Choice[];
-  onSubmit: (votes: Record<string, number>) => void;
+  onSubmit: (votes: Votes) => void;
 }
 const VotePhase = ({ choices, onSubmit }: VotePhaseProps) => {
-  const [votes, setVotes] = useState<Record<string, number>>({});
+  const [votes, setVotes] = useState<Votes>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {

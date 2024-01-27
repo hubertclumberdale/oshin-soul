@@ -1,6 +1,24 @@
 import WebSocket from "ws";
 import { Phase, Player, Room, SocketBroadcast, SocketMessage } from "../types";
 
+export const startLobbyPhase = (
+    {
+        wss,
+        room
+    }: {
+        wss: WebSocket.Server,
+        room: Room
+    }
+) => {
+    console.log('Starting lobby phase')
+    room.currentMode = Phase.Lobby;
+    const message: SocketMessage = { event: SocketBroadcast.LobbyPhase, data: { roomId: room.id } }
+    wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify(message));
+        }
+    });
+}
 
 export const startMovementPhase = (
     {
@@ -49,6 +67,12 @@ export const startComposePhase = ({
             }
         });
     });
+    const startTimer = { event: SocketBroadcast.StartComposePhaseTimer, data: { roomId: room.id } }
+    wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify(startTimer));
+        }
+    });
 }
 
 export const startVotePhase = ({
@@ -64,6 +88,12 @@ export const startVotePhase = ({
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(message));
+        }
+    });
+    const startTimer = { event: SocketBroadcast.StartVotePhaseTimer, data: { roomId: room.id } }
+    wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify(startTimer));
         }
     });
 }
@@ -82,4 +112,22 @@ export const playerJoinedRoom = ({
     console.log('Player joined room:', player);
     const message: SocketMessage = { event: SocketBroadcast.RoomJoined, data: { roomId, playerId: player.id } }
     ws.send(JSON.stringify(message));
+}
+
+export const startWinPhase = ({
+    wss,
+    room
+}: {
+    wss: WebSocket.Server,
+    room: Room
+}) => {
+    console.log('Starting win phase');
+    room.currentMode = Phase.Win;
+    const winningChoice = room.choices.reduce((prev, current) => (prev.score > current.score) ? prev : current)
+    const message: SocketMessage = { event: SocketBroadcast.WinPhase, data: { roomId: room.id, winningChoice } }
+    wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify(message));
+        }
+    });
 }
