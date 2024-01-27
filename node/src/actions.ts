@@ -87,9 +87,11 @@ export const chooseSentence = ({
 
 export const addWordsToPlayer = ({ obtainedPack, player }: { obtainedPack: string, player: Player }) => {
     console.log("obtained pack", obtainedPack)
-    const words = getWordsFromPack({ obtainedPack })
-    console.log("words", words)
-    player.words.push(...words);
+    const words = getWordsFromPack({ obtainedPack });
+    console.log("words", words);
+    const uniqueWords = [...new Set([...player.words, ...words])];
+    console.log("unique words", uniqueWords);
+    player.words = uniqueWords;
     shuffleArray(player.words);
 }
 
