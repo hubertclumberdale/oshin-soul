@@ -1,5 +1,6 @@
 import { Box, Button } from "@mui/joy";
 import Movement from "src/components/movement";
+import withMotion from "src/hoc/WithMotion";
 
 interface LobbyPhaseProps {
   ready: boolean;
@@ -36,4 +37,4 @@ const LobbyPhase = ({ ready, toggleReady, onMovement }: LobbyPhaseProps) => {
   );
 };
 
-export default LobbyPhase;
+export default withMotion(LobbyPhase);

@@ -1,9 +1,10 @@
 import { Box, Card } from "@mui/joy";
 import Sentence from "src/components/Sentence";
 import Movement from "src/components/movement";
+import WithMotion from "src/hoc/WithMotion";
 
 interface MovementPhaseProps {
-  sentence: string
+  sentence: string;
   onMovement: (direction: { x: number; y: number }) => void;
 }
 
@@ -23,4 +24,4 @@ const MovementPhase = ({ sentence, onMovement }: MovementPhaseProps) => {
   );
 };
 
-export default MovementPhase;
+export default WithMotion(MovementPhase);

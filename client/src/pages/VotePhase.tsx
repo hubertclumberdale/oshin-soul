@@ -4,6 +4,7 @@ import thumbUp from "src/asset/thumb-up.png";
 import thumbDown from "src/asset/thumb-down.png";
 import { useEffect } from "react";
 import { Choice, Votes } from "src/types";
+import WithMotion from "src/hoc/WithMotion";
 
 interface VotePhaseProps {
   choices: Choice[];
@@ -108,4 +109,4 @@ const VotePhase = ({ choices, onSubmit }: VotePhaseProps) => {
   );
 };
 
-export default VotePhase;
+export default WithMotion(VotePhase);

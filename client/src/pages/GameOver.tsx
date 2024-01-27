@@ -1,3 +1,4 @@
+import WithMotion from "src/hoc/WithMotion";
 import { Player } from "src/types";
 
 interface GameOverProps {
@@ -9,15 +10,17 @@ const GameOver = ({ players }: GameOverProps) => {
       <h1>Game Over</h1>
       <h3>
         Winner:{" "}
-        {players.reduce((prev, curr) => {
-          if (curr.score > prev.score) {
-            return curr;
-          } else {
-            return prev;
-          }
-        }).color}
+        {
+          players.reduce((prev, curr) => {
+            if (curr.score > prev.score) {
+              return curr;
+            } else {
+              return prev;
+            }
+          }).color
+        }
       </h3>
     </>
   );
 };
-export default GameOver;
+export default WithMotion(GameOver);
