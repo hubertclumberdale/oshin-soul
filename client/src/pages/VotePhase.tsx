@@ -8,9 +8,10 @@ import WithMotion from "src/hoc/WithMotion";
 
 interface VotePhaseProps {
   choices: Choice[];
+  playerId: string;
   onSubmit: (votes: Votes) => void;
 }
-const VotePhase = ({ choices, onSubmit }: VotePhaseProps) => {
+const VotePhase = ({ choices, playerId, onSubmit }: VotePhaseProps) => {
   const [votes, setVotes] = useState<Votes>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -57,50 +58,56 @@ const VotePhase = ({ choices, onSubmit }: VotePhaseProps) => {
           overflowY: "auto",
         }}
       >
-        {choices.map((choice) => (
-          <Box
-            sx={{ display: "flex", gap: 1, justifyContent: "space-between" }}
-          >
-            <Card
-              size="sm"
-              key={choice.playerId}
-              sx={{ minWidth: "70%", userSelect: "none", textAlign: "center" }}
+        {choices
+          .filter((choice) => choice.playerId !== playerId)
+          .map((choice) => (
+            <Box
+              sx={{ display: "flex", gap: 1, justifyContent: "space-between" }}
             >
-              {choice.choice}
-            </Card>
-            <Box sx={{ display: "flex", gap: 1 }}>
-              <IconButton
-                variant="soft"
-                color="primary"
+              <Card
                 size="sm"
-                onClick={() => handleVote(choice.playerId, 1)}
-                disabled={votes[choice.playerId] === -1}
-                sx={{ userSelect: "none" }}
+                key={choice.playerId}
+                sx={{
+                  minWidth: "70%",
+                  userSelect: "none",
+                  textAlign: "center",
+                }}
               >
-                <img
-                  src={thumbUp}
-                  alt="thumb up"
-                  style={{ width: 32, height: 32 }}
-                />
-              </IconButton>
+                {choice.choice}
+              </Card>
+              <Box sx={{ display: "flex", gap: 1 }}>
+                <IconButton
+                  variant="soft"
+                  color="primary"
+                  size="sm"
+                  onClick={() => handleVote(choice.playerId, 1)}
+                  disabled={votes[choice.playerId] === -1}
+                  sx={{ userSelect: "none" }}
+                >
+                  <img
+                    src={thumbUp}
+                    alt="thumb up"
+                    style={{ width: 32, height: 32 }}
+                  />
+                </IconButton>
 
-              <IconButton
-                variant="soft"
-                color="primary"
-                size="sm"
-                onClick={() => handleVote(choice.playerId, -1)}
-                disabled={votes[choice.playerId] === 1}
-                sx={{ userSelect: "none" }}
-              >
-                <img
-                  src={thumbDown}
-                  alt="thumb down"
-                  style={{ width: 32, height: 32 }}
-                />
-              </IconButton>
+                <IconButton
+                  variant="soft"
+                  color="primary"
+                  size="sm"
+                  onClick={() => handleVote(choice.playerId, -1)}
+                  disabled={votes[choice.playerId] === 1}
+                  sx={{ userSelect: "none" }}
+                >
+                  <img
+                    src={thumbDown}
+                    alt="thumb down"
+                    style={{ width: 32, height: 32 }}
+                  />
+                </IconButton>
+              </Box>
             </Box>
-          </Box>
-        ))}
+          ))}
       </Box>
       <Button onClick={onClick} disabled={isSubmitted}>
         Submit

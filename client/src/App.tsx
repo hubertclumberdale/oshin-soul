@@ -292,7 +292,11 @@ function App() {
           {/* Phase 4 - Vote */}
           {gameMode === Phase.Vote && (
             <>
-              <VotePhase choices={choices} onSubmit={onVotesSubmit} />
+              <VotePhase
+                choices={choices}
+                playerId={playerId}
+                onSubmit={onVotesSubmit}
+              />
             </>
           )}
 
