@@ -1,5 +1,6 @@
-import { Box } from "@mui/joy";
+import { Box, Card } from "@mui/joy";
 import React from "react";
+import Sentence from "src/components/Sentence";
 import Movement from "src/components/movement";
 
 interface MovementPhaseProps {
@@ -12,6 +13,9 @@ const MovementPhase = ({ onMovement }: MovementPhaseProps) => {
       sx={{ position: "relative", height: "100%", width: "100%" }}
       className="MovementPhase"
     >
+      <Card>
+        <Sentence sentence={"The X jumps over the X".split(" ")} disabled />
+      </Card>
       <Box sx={{ position: "absolute", bottom: 32, right: 32 }}>
         <Movement onMovement={onMovement} />
       </Box>

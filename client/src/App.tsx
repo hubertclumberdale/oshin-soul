@@ -148,7 +148,10 @@ function App() {
             roomId={roomId}
             endMovementTimer={endMovementTimer}
           />
+          {/* Phase 1 - insert room number */}
           {gameMode === Phase.Join && <JoinPhase ws={ws} />}
+
+          {/* Phase 2 - wait in lobby, tutorial */}
           {gameMode === Phase.Lobby && (
             <LobbyPhase
               ready={ready}
@@ -157,9 +160,12 @@ function App() {
             />
           )}
 
+          {/* Phase 3 - Movement */}
           {gameMode === Phase.Movement && (
             <MovementPhase onMovement={onMovement} />
           )}
+
+          {/* Phase 4 - Compose */}
           {gameMode === Phase.Compose && (
             <ComposePhase
               onSubmit={onSentenceSubmit}
