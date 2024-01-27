@@ -7,6 +7,8 @@ using System.Collections.Concurrent;
 [System.Serializable]
 class SocketData {
     public string roomId;
+    public string playerId;
+    public Direction direction;
 }
 
 [System.Serializable]
@@ -82,6 +84,18 @@ public class WebsocketManager : MonoBehaviour
         if(socketMessage.command.ToString() == "start-movement-phase-timer"){
             _actions.Enqueue(() => StartMovementPhaseTimer());
         }
+
+        if(socketMessage.command.ToString() == "player-movement"){
+            _actions.Enqueue(() => MovePlayer(socketMessage.data.roomId, socketMessage.data.playerId, socketMessage.data.direction));
+        }
+
+        if(socketMessage.command.ToString() == "start-compose-phase-timer"){
+            _actions.Enqueue(() => StartComposePhaseTimer());
+        }
+
+        if(socketMessage.command.ToString() == "start-vote-phase-timer"){
+            _actions.Enqueue(() => StartVotePhaseTimer());
+        }
     }
 
     private void SetGameMode(string gameMode){
@@ -95,6 +109,19 @@ public class WebsocketManager : MonoBehaviour
     
     private void StartMovementPhaseTimer(){
         gameManager.StartMovementPhaseTimer();
+    }
+
+    private void StartComposePhaseTimer(){
+        gameManager.StartComposePhaseTimer();
+    }
+
+    private void StartVotePhaseTimer(){
+        gameManager.StartVotePhaseTimer();
+    }
+
+    private void MovePlayer(string roomId, string playerId, Direction direction){
+        Debug.Log("Moving player: " + playerId + " in room: " + roomId + " in direction: " + direction.x + ", " + direction.y);
+        gameManager.MovePlayer(roomId, playerId, direction);
     }
 
     public void SendMovementPhaseTimerEnded(){
@@ -125,4 +152,5 @@ public class WebsocketManager : MonoBehaviour
         message.data.roomId = this.roomId;
         ws.Send(JsonUtility.ToJson(message));
     }
+
 }

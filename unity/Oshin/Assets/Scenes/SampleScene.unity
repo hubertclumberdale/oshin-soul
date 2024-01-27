@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028326, g: 0.22571333, b: 0.30692202, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5761,10 +5761,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b752771473187a043b651a30ed3e0832, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 7286985402131967619, guid: bcc23d17068489c4f811f090b724ca1e, type: 3}
   websocketManager: {fileID: 284977876}
-  players: []
   timerDuration: 0
   gameMode: 
+  movementPhaseTimerDuration: 10
+  composePhaseTimerDuration: 10
+  votePhaseTimerDuration: 10
 --- !u!4 &1145995613
 Transform:
   m_ObjectHideFlags: 0

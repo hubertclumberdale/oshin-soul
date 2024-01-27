@@ -81,7 +81,7 @@ export const startComposePhase = ({
             }
         });
     });
-    const startTimer = { event: SocketBroadcast.StartComposePhaseTimer, data: { roomId: room.id } }
+    const startTimer = { command: SocketBroadcast.StartComposePhaseTimer, data: { roomId: room.id } }
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(startTimer));
@@ -106,7 +106,7 @@ export const startVotePhase = ({
             client.send(JSON.stringify(message));
         }
     });
-    const startTimer = { event: SocketBroadcast.StartVotePhaseTimer, data: { roomId: room.id } }
+    const startTimer = { command: SocketBroadcast.StartVotePhaseTimer, data: { roomId: room.id } }
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(startTimer));

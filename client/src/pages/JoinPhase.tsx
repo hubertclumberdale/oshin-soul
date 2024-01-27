@@ -15,9 +15,9 @@ const JoinPhase = ({ ws }: JoinPhaseProps) => {
   const [roomId, setRoomId] = useState("");
 
   const handleRoomInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    command: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setRoomId(event.target.value);
+    setRoomId(command.target.value);
   };
 
   const handleJoinRoomClick = () => {

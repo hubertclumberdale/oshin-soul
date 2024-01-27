@@ -21,7 +21,7 @@ const AdminPanel = ({
 
     ws.send(
       JSON.stringify({
-        event: SocketEvent.CreateRoom,
+        command: SocketEvent.CreateRoom,
         data: {},
       })
     );

@@ -7,6 +7,7 @@ import { numberOfRounds } from '../config/game';
 
 export const onCreateRoom = ({
     ws,
+    wss,
     rooms
 }: {
     ws: WebSocket,
@@ -17,7 +18,12 @@ export const onCreateRoom = ({
         ws,
         rooms
     })
-    ws.send(JSON.stringify({ event: SocketBroadcast.RoomCreated, data: { roomId: newRoom.id } }));
+    const message: SocketMessage = { command: SocketBroadcast.RoomCreated, data: { roomId: newRoom.id } }
+    wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify(message));
+        }
+    })
     console.log('Room created:', newRoom);
 }
 
@@ -247,7 +253,7 @@ export const onPlayerDisconnected = (
         room.players = room.players.filter((p) => p.id !== ws.id);
         wss.clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {
-                client.send(JSON.stringify({ event: SocketBroadcast.PlayerLeft, data: ws.id }));
+                client.send(JSON.stringify({ command: SocketBroadcast.PlayerLeft, data: ws.id }));
             }
         });
         if (room.players.length === 0) {

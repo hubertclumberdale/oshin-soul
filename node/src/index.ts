@@ -40,7 +40,7 @@ wss.on('connection', (ws: WebSocket) => {
 
     ws.on('message', (message: string) => {
         const { command: event, data } = JSON.parse(message) as SocketMessage;
-        console.log('Received event:', event, 'with data:', data);
+        console.log('Received command:', event, 'with data:', data);
 
         switch (event) {
             case SocketEvent.CreateRoom: {
@@ -164,7 +164,7 @@ wss.on('connection', (ws: WebSocket) => {
 
 
             default:
-                console.log('Unknown event:', event);
+                console.log('Unknown command:', event);
                 break;
         }
     });

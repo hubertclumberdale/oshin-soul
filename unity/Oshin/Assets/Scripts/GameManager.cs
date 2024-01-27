@@ -1,61 +1,78 @@
 using UnityEngine;
+using System.Collections;
+
 
 public class GameManager : MonoBehaviour
 {
 
+
+    public GameObject playerPrefab;
     public WebsocketManager websocketManager;
-    public Player[] players;
+    private GameObject[] players;
     public int timerDuration;
     public string gameMode;
 
-    private float timer;
+    public int movementPhaseTimerDuration = 10;
+    public int composePhaseTimerDuration = 10;
+    public int votePhaseTimerDuration = 10;
 
-    private void Start()
-    {
-        timer = 5 / 1000f;
-    }
 
     public void StartMovementPhaseTimer()
     {
-        Debug.Log("Timer started");
-        if (timer > 0)
-        {
-            timer -= Time.deltaTime;
-            if (timer <= 0)
-            {
-                Debug.Log("Timer ended");
-                websocketManager.SendMovementPhaseTimerEnded();
-            }
-        }
+        StartCoroutine(MovementPhaseTimer());
     }
 
     public void StartComposePhaseTimer()
     {
-        Debug.Log("Timer started");
-        if (timer > 0)
-        {
-            timer -= Time.deltaTime;
-            if (timer <= 0)
-            {
-                Debug.Log("Timer ended");
-                websocketManager.SendVotePhaseTimerEnded();
-            }
-        }
+        StartCoroutine(ComposePhaseTimer());
     }
 
 
     public void StartVotePhaseTimer()
     {
-        Debug.Log("Timer started");
-        if (timer > 0)
+        StartCoroutine(VotePhaseTimer());
+    }
+
+    IEnumerator MovementPhaseTimer()
+    {
+        while (true)
         {
-            timer -= Time.deltaTime;
-            if (timer <= 0)
-            {
-                Debug.Log("Timer ended");
-                websocketManager.SendVotePhaseTimerEnded();
-            }
+            yield return new WaitForSeconds(movementPhaseTimerDuration);
+            websocketManager.SendMovementPhaseTimerEnded();
         }
+    }
+
+    // Define the ActionPhaseTimer coroutine
+    IEnumerator ComposePhaseTimer()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(composePhaseTimerDuration);
+            websocketManager.SendComposePhaseTimerEnded();
+        }
+    }
+
+    // Define the PlanningPhaseTimer coroutine
+    IEnumerator VotePhaseTimer()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(votePhaseTimerDuration);
+            websocketManager.SendVotePhaseTimerEnded();
+        }
+    }
+
+    public void InstantiatePlayer()
+    {
+        GameObject player = Instantiate(playerPrefab) as GameObject;
+        player.transform.position = GameObject.Find("SpawnPoint").transform.position;
+
+    }
+
+    public void MovePlayer(string roomId, string playerId, Direction direction)
+    {
+        Debug.Log("Moving player: " + playerId + " in room: " + roomId + " in direction: " + direction.x + ", " + direction.y);
+        
     }
 
 }
