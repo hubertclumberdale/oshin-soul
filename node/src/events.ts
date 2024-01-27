@@ -52,7 +52,7 @@ export const joinRoom = ({
     ws: WebSocket,
     wss: WebSocket.Server,
     rooms: Room[]
-    data: SocketData
+    data: Partial<SocketData>
 }) => {
     console.log('JoinRoom event triggered in room:', data.roomId);
     console.log(data.roomId)

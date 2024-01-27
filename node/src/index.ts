@@ -29,7 +29,7 @@ Player submission
 */
 import WebSocket from 'ws';
 import { Color, Phase, Player, Room, SocketBroadcast, SocketEvent, SocketMessage } from '../types';
-import { createRoom } from './events';
+import { createRoom, joinRoom } from './events';
 const wss = new WebSocket.Server({ port: 7002 });
 
 const rooms: Room[] = [];
@@ -55,7 +55,12 @@ wss.on('connection', (ws: WebSocket) => {
             }
 
             case SocketEvent.JoinRoom: {
-                joinRoom()
+                joinRoom({
+                    ws,
+                    wss,
+                    rooms,
+                    data
+                })
                 break;
 
             }
