@@ -137,3 +137,34 @@ export const assignVotesToChoices = ({ room, votes }: { room: Room, votes: Votes
         }
     });
 }
+
+
+export const cleanRoom = ({ room }: { room: Room }) => {
+    room.incompleteSentence = '';
+    room.winner = null;
+    room.choices = [];
+    room.players.forEach((player) => {
+        player.words = [];
+        player.voted = false;
+    });
+}
+
+export const closeRoom = (
+    {
+        room,
+        rooms,
+        wss
+    }: {
+        room: Room,
+        rooms: Room[],
+        wss: WebSocket.Server
+    }
+) => {
+    const index = rooms.indexOf(room);
+    if (index !== -1) {
+        rooms.splice(index, 1);
+    }
+    wss.clients.forEach((client) => {
+        client.close();
+    });
+}

@@ -1,5 +1,6 @@
 import WebSocket from "ws";
 import { Phase, Player, Room, SocketBroadcast, SocketMessage } from "../types";
+import { cleanRoom } from "./actions";
 
 export const startLobbyPhase = (
     {
@@ -16,12 +17,9 @@ export const startLobbyPhase = (
         player.words = [];
         player.voted = false;
     });
-    room.incompleteSentence = '';
     room.currentMode = Phase.Lobby;
-    room.winner = null;
-    room.choices = [];
-    
-    
+
+    cleanRoom({room});
     
     console.log('Starting lobby phase');
 

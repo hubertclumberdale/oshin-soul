@@ -2,7 +2,7 @@ import WebSocket from 'ws';
 
 import { Phase, Room, SocketBroadcast, SocketData, SocketMessage } from "../types";
 import { playerJoinedRoom, startComposePhase, startGameOverPhase, startLobbyPhase, startMovementPhase, startVotePhase, startWinPhase } from './broadcasts';
-import { chooseSentence, addNewPlayer, createRoom, movePlayer, addWordsToPlayer, assignVotesToChoices } from './actions';
+import { chooseSentence, addNewPlayer, createRoom, movePlayer, addWordsToPlayer, assignVotesToChoices, closeRoom } from './actions';
 import { numberOfRounds } from '../config/game';
 
 export const onCreateRoom = ({
@@ -250,6 +250,13 @@ export const onPlayerDisconnected = (
                 client.send(JSON.stringify({ event: SocketBroadcast.PlayerLeft, data: ws.id }));
             }
         });
+        if (room.players.length === 0) {
+            closeRoom({
+                wss,
+                rooms,
+                room
+            })
+        }
     }
 }
 
