@@ -21,11 +21,8 @@ export interface Room {
     id: string;
     players: Player[]; // Updated to use Player interface
     unity: string
-    gameStarted: boolean;
     incompleteSentence: string;
-    turns: number;
     currentMode: Phase;
-    playersAreMoving: boolean;
     winner: string | null;
     roundNumber: number;
     choices: Choice[]

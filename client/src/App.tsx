@@ -35,7 +35,7 @@ function App() {
   // const [error, setError] = useState<string>("");
 
   useEffect(() => {
-    const websocket = new WebSocket("ws://localhost:7002");
+    const websocket = new WebSocket("ws://192.168.1.239:7002");
     setWs(websocket);
   }, []);
 
@@ -71,6 +71,19 @@ function App() {
           setGameMode(Phase.Lobby);
 
           break;
+
+        case SocketBroadcast.LobbyPhase: {
+          console.log("Lobby phase started");
+          setReady(false);
+          setSentence("");
+          setWords([]);
+          setChoices([]);
+          setWinningChoice(undefined);
+          setPlayers([]);
+          setGameMode(Phase.Lobby);
+          break;
+        }
+
         case SocketBroadcast.RoomNotFound:
           console.log("Room not found");
           // TODO error handling

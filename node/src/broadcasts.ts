@@ -10,12 +10,21 @@ export const startLobbyPhase = (
         room: Room
     }
 ) => {
+    console.log('Cleaning up room and players');
     room.players.forEach((player) => {
         player.ready = false;
+        player.words = [];
+        player.voted = false;
     });
-
-    console.log('Starting lobby phase');
+    room.incompleteSentence = '';
     room.currentMode = Phase.Lobby;
+    room.winner = null;
+    room.choices = [];
+    
+    
+    
+    console.log('Starting lobby phase');
+
     const message: SocketMessage = { event: SocketBroadcast.LobbyPhase, data: { roomId: room.id } };
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
@@ -36,7 +45,6 @@ export const startMovementPhase = (
     }
 ) => {
     console.log('Starting movement phase')
-    room.gameStarted = true;
     room.currentMode = Phase.Movement;
     room.players.forEach((player) => {
         player.ready = false;

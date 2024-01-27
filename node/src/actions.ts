@@ -32,11 +32,8 @@ export const createRoom = (
         id: roomId,
         players: [],
         unity: ws.id,
-        gameStarted: false,
         incompleteSentence: '',
-        turns: 0,
         currentMode: Phase.Lobby,
-        playersAreMoving: false,
         winner: null,
         roundNumber: 0,
         choices: []

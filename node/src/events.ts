@@ -368,8 +368,8 @@ export const onPlayerReadyForNextRound = (
             player.ready = true;
             const allPlayersReady = room.players.every((player) => player.ready);
             if (allPlayersReady) {
-                const { roundNumber } = data
-                if (roundNumber < numberOfRounds) {
+                room.roundNumber += 1;
+                if (room.roundNumber < numberOfRounds) {
                     startLobbyPhase({
                         wss,
                         room
