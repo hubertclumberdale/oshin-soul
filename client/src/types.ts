@@ -91,6 +91,8 @@ export enum SocketEvent {
     ComposePhaseTimerFinished = 'compose-phase-timer-finished',
     VoteSubmitted = 'vote-submitted',
     VotePhaseTimerFinished = 'vote-phase-timer-finished',
+    ReadyForNextRound = 'ready-for-next-round',
+    NewGame = 'new-game',
 }
 
 export enum SocketBroadcast {
