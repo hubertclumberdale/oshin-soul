@@ -1,3 +1,4 @@
+import { Box, Button, Card, Chip, Typography } from "@mui/joy";
 import { useEffect, useState } from "react";
 
 type GridWord = {
@@ -8,7 +9,7 @@ type GridWord = {
 interface ComposePhaseProps {
   sentence: string;
   words: string[];
-  onSubmit: (sentence: string) => void
+  onSubmit: (sentence: string) => void;
 }
 
 const ComposePhase = ({ sentence, words, onSubmit }: ComposePhaseProps) => {
@@ -17,6 +18,10 @@ const ComposePhase = ({ sentence, words, onSubmit }: ComposePhaseProps) => {
   const [grid, setGrid] = useState<GridWord[]>([]);
 
   useEffect(() => {
+    console.log({
+      sentence: sentence,
+      words: words,
+    });
     setLocalSentence(sentence.split(" "));
     const grid = words.map((word, index) => ({
       word,
@@ -57,31 +62,87 @@ const ComposePhase = ({ sentence, words, onSubmit }: ComposePhaseProps) => {
   };
 
   const handleSubmit = () => {
-    const sentenceString = localSentence.join(' ');
+    const sentenceString = localSentence.join(" ");
     onSubmit(sentenceString);
   };
 
   return (
-    <div>
-      <div>
-        {localSentence.map((word, index) => (
-          <span
-            key={index}
-            onClick={() => word !== "X" && handleChosenWordClick(word)}
-          >
-            {word}{" "}
-          </span>
-        ))}
-      </div>
-      <div>
-        {grid.map((wordObj, index) => (
-          <button key={index} onClick={() => handleGridWordClick(wordObj.word)}>
-            {wordObj.word}
-          </button>
-        ))}
-      </div>
-      <button onClick={handleSubmit} disabled={localSentence.includes("X")}>Submit</button>
-    </div>
+    <Box
+      sx={{
+        widht: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 2,
+      }}
+    >
+      <Card orientation="horizontal" sx={{ minWidth: "100%", height: "50%" }}>
+        <Box
+          sx={{
+            display: "flex",
+            height: "min-content",
+            gap: 1,
+            flexWrap: "wrap",
+          }}
+        >
+          {localSentence.map((word, index) => (
+            <Typography
+              key={index}
+              onClick={() => word !== "X" && handleChosenWordClick(word)}
+            >
+              {word !== "X" ? (
+                <>
+                  {words.includes(word) ? (
+                    <Chip
+                      variant="solid"
+                      color="primary"
+                      size="lg"
+                      sx={{ minWidth: 100 }}
+                    >
+                      {word}
+                    </Chip>
+                  ) : (
+                    <Typography fontSize="xl">{word}</Typography>
+                  )}
+                </>
+              ) : (
+                <Chip color="primary" sx={{ minWidth: 100 }}></Chip>
+              )}
+            </Typography>
+          ))}
+        </Box>
+      </Card>
+      <Card
+        orientation="horizontal"
+        sx={{ flexWrap: "wrap", minWidth: "100%", height: "50%" }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            height: "min-content",
+            gap: 1,
+            flexWrap: "wrap",
+          }}
+        >
+          {grid.map((wordObj, index) => (
+            <Chip
+              disabled={!localSentence.includes("X")}
+              color="primary"
+              size="lg"
+              key={index}
+              onClick={() => handleGridWordClick(wordObj.word)}
+              sx={{ minHeight: 50 }}
+            >
+              {wordObj.word}
+            </Chip>
+          ))}
+        </Box>
+      </Card>
+      <Button onClick={handleSubmit} disabled={localSentence.includes("X")}>
+        Submit
+      </Button>
+    </Box>
   );
 };
 

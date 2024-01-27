@@ -156,6 +156,7 @@ function App() {
               onMovement={onMovement}
             />
           )}
+
           {gameMode === Phase.Movement && (
             <MovementPhase onMovement={onMovement} />
           )}

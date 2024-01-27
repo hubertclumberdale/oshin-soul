@@ -1,4 +1,4 @@
-import { Button, Card, Chip } from "@mui/joy";
+import { Button, Card, Chip, Typography } from "@mui/joy";
 import React from "react";
 import { SocketEvent } from "src/types";
 
@@ -21,7 +21,8 @@ const AdminPanel = ({ ws, roomId, endMovementTimer }: AdminPanelProps) => {
   };
 
   return (
-    <Card size="sm">
+    <Card size="sm" sx={{ mb: 1 }}>
+      <Typography fontSize="sm">AdminPanel</Typography>
       <Card size="sm" orientation="horizontal">
         <Button size="sm" onClick={createTestRoom}>
           Create Room
