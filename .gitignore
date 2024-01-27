@@ -1,13 +1,13 @@
 node_modules
 node/dist/
 
-*/[Ll]ibrary/
-*/[Tt]emp/
-*/[Oo]bj/
-*/[Bb]uild/
-*/[Bb]uilds/
-*/[Ll]ogs/
-*/[Mm]emoryCaptures/
+unity/Oshin/[Ll]ibrary/
+unity/Oshin/[Tt]emp/
+unity/Oshin/[Oo]bj/
+unity/Oshin/[Bb]uild/
+unity/Oshin/[Bb]uilds/
+unity/Oshin/[Ll]ogs/
+unity/Oshin/[Mm]emoryCaptures/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 */!/[Aa]ssets/**/*.meta
