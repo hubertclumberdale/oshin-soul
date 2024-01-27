@@ -180,6 +180,7 @@ function App() {
         p: 1,
         bgcolor: "background.level1",
       }}
+      className="App"
     >
       {ws ? (
         <>
@@ -215,28 +216,35 @@ function App() {
               words={words}
             />
           )}
-          
+
           {/* Phase 4 - Compose */}
-          {gameMode === Phase.Vote && <>
-            <VotePhase
-            choices={[
-              { choice: "the quick brown fox", playerId: "123", votes: 0 },
-              { choice: "jumps over the lazy dog", playerId: "232", votes: 0 },
-              {
-                choice: "lorem ipsum dolor sit amet",
-                playerId: "3223",
-                votes: 0,
-              },
-              {
-                choice: "consectetur adipiscing elit",
-                playerId: "4123",
-                votes: 0,
-              },
-            ]}
-            onSubmit={(votes) => {
-              console.log(votes);
-            }}
-          /></>}
+          {gameMode === Phase.Vote && (
+            <>
+              <VotePhase
+                choices={[
+                  { choice: "the quick brown fox", playerId: "123", votes: 0 },
+                  {
+                    choice: "jumps over the lazy dog",
+                    playerId: "232",
+                    votes: 0,
+                  },
+                  {
+                    choice: "lorem ipsum dolor sit amet",
+                    playerId: "3223",
+                    votes: 0,
+                  },
+                  {
+                    choice: "consectetur adipiscing elit",
+                    playerId: "4123",
+                    votes: 0,
+                  },
+                ]}
+                onSubmit={(votes) => {
+                  console.log(votes);
+                }}
+              />
+            </>
+          )}
         </>
       ) : (
         <div>Connecting to webSocket..</div>
