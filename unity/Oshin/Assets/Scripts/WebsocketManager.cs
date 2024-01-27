@@ -65,7 +65,7 @@ public class WebsocketManager : MonoBehaviour
     void OnMessageHandler(object sender, MessageEventArgs e)
     {
         SocketMessage socketMessage = JsonUtility.FromJson<SocketMessage>(""+e.Data);
-        Debug.Log("Received Message: " + socketMessage.command)
+        Debug.Log("Received Message: " + socketMessage.command);
         if(socketMessage.command.ToString() == "room-created"){
             Debug.Log("Room Created: " + socketMessage.data);
             _actions.Enqueue(() => SetRoomId(socketMessage.data.roomId));
