@@ -1,6 +1,7 @@
 import { Box, Button, Card, Chip } from "@mui/joy";
 import { useEffect, useState } from "react";
 import Sentence from "src/components/Sentence";
+import WithMotion from "src/hoc/WithMotion";
 
 type GridWord = {
   word: string;
@@ -124,4 +125,4 @@ const ComposePhase = ({ sentence, words, onSubmit }: ComposePhaseProps) => {
   );
 };
 
-export default ComposePhase;
+export default WithMotion(ComposePhase);
