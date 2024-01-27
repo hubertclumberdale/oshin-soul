@@ -2,8 +2,10 @@ import { Box } from "@mui/joy";
 import React, { useState } from "react";
 import { SocketEvent, SocketMessage } from "src/types";
 import { Button, Input } from "@mui/joy";
-import { motion } from "framer-motion"; // Import motion from framer-motion
 import WithMotion from "src/hoc/WithMotion";
+import { motion } from "framer-motion";
+
+const MotionButton = motion(Button);
 
 interface JoinPhaseProps {
   ws: WebSocket;
@@ -31,34 +33,52 @@ const JoinPhase = ({ ws }: JoinPhaseProps) => {
   };
 
   return (
-    <motion.div
-      style={{ flexGrow: 1 }}
-      initial={{ opacity: 0, x: 100 }} // Initial state (hidden)
-      animate={{ opacity: 1, x: 0 }} // Final state (visible)
+    <Box
+      sx={{
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        gap: 3,
+        flexDirection: "column",
+        justifyContent: "stretch",
+      }}
+      className="JoinPhase"
     >
       <Box
         sx={{
-          height: "100%",
-          width: "100%",
+          minHeight: "50%",
           display: "flex",
-          gap: 3,
-          flexDirection: "column",
-          justifyContent: "center",
           alignItems: "center",
+          justifyContent: "center",
         }}
-        className="JoinPhase"
       >
         <Input
+          sx={{ minWidth: 200, maxWidth: 200 }}
           size="lg"
           value={roomId}
           onChange={handleRoomInputChange}
-          placeholder="Insert room id"
+          placeholder="Room ID"
         />
-        <Button size="lg" onClick={handleJoinRoomClick}>
-          Join room
-        </Button>
       </Box>
-    </motion.div>
+      <Box
+        sx={{
+          minHeight: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <MotionButton
+          sx={{ minWidth: 200, maxWidth: 200, minHeight: 100 }}
+          size="lg"
+          onClick={handleJoinRoomClick}
+          animate={{ rotate: [1, -1, 1] }} // Rotate between 2 and -2 degrees
+          transition={{ repeat: Infinity, duration: 1, ease: "easeInOut" }} // Yoyo effect to alternate between the two states indefinitely
+        >
+          Join room
+        </MotionButton>
+      </Box>
+    </Box>
   );
 };
 
