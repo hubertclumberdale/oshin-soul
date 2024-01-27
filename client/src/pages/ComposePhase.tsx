@@ -1,5 +1,6 @@
-import { Box, Button, Card, Chip, Typography } from "@mui/joy";
+import { Box, Button, Card, Chip } from "@mui/joy";
 import { useEffect, useState } from "react";
+import Sentence from "src/components/Sentence";
 
 type GridWord = {
   word: string;
@@ -74,40 +75,12 @@ const ComposePhase = ({ sentence, words, onSubmit }: ComposePhaseProps) => {
       }}
     >
       <Card orientation="horizontal" sx={{ minWidth: "100%", height: "50%" }}>
-        <Box
-          sx={{
-            display: "flex",
-            height: "min-content",
-            gap: 1,
-            flexWrap: "wrap",
-          }}
-        >
-          {localSentence.map((word, index) => (
-            <Typography
-              key={index}
-              onClick={() => word !== "X" && handleChosenWordClick(word)}
-            >
-              {word !== "X" ? (
-                <>
-                  {words.includes(word) ? (
-                    <Chip
-                      variant="solid"
-                      color="primary"
-                      size="lg"
-                      sx={{ minWidth: 100 }}
-                    >
-                      {word}
-                    </Chip>
-                  ) : (
-                    <Typography fontSize="xl">{word}</Typography>
-                  )}
-                </>
-              ) : (
-                <Chip color="primary" sx={{ minWidth: 100 }}></Chip>
-              )}
-            </Typography>
-          ))}
-        </Box>
+        <Sentence
+          sentence={localSentence}
+          words={words}
+          handleChosenWordClick={handleChosenWordClick}
+          disabled={false}
+        />
       </Card>
       <Card
         orientation="horizontal"

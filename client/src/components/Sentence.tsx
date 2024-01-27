@@ -37,7 +37,10 @@ const Sentence = (props: SentenceProps) => {
               {word !== "X" ? (
                 <Typography fontSize="xl">{word}</Typography>
               ) : (
-                <Chip color="primary" sx={{ minWidth: 100 }} />
+                <Chip
+                  color="primary"
+                  sx={{ minWidth: 100, textAlign: "center" }}
+                />
               )}
             </>
           )}
@@ -51,7 +54,7 @@ const Sentence = (props: SentenceProps) => {
                       variant="solid"
                       color="primary"
                       size="lg"
-                      sx={{ minWidth: 100, height: 20 }}
+                      sx={{ minWidth: 100, height: 20, textAlign: "center" }}
                     >
                       {word}
                     </Chip>
@@ -60,7 +63,10 @@ const Sentence = (props: SentenceProps) => {
                   )}
                 </>
               ) : (
-                <Chip color="primary" sx={{ minWidth: 100 }} />
+                <Chip
+                  color="primary"
+                  sx={{ minWidth: 100, textAlign: "center" }}
+                />
               )}
             </>
           )}
