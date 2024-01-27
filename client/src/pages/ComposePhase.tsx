@@ -18,10 +18,6 @@ const ComposePhase = ({ sentence, words, onSubmit }: ComposePhaseProps) => {
   const [grid, setGrid] = useState<GridWord[]>([]);
 
   useEffect(() => {
-    console.log({
-      sentence: sentence,
-      words: words,
-    });
     setLocalSentence(sentence.split(" "));
     const grid = words.map((word, index) => ({
       word,
