@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
         timer = 5 / 1000f;
     }
 
-    public void StartTimer()
+    public void StartMovementPhaseTimer()
     {
         Debug.Log("Timer started");
         if (timer > 0)
@@ -25,6 +25,35 @@ public class GameManager : MonoBehaviour
             {
                 Debug.Log("Timer ended");
                 websocketManager.SendMovementPhaseTimerEnded();
+            }
+        }
+    }
+
+    public void StartComposePhaseTimer()
+    {
+        Debug.Log("Timer started");
+        if (timer > 0)
+        {
+            timer -= Time.deltaTime;
+            if (timer <= 0)
+            {
+                Debug.Log("Timer ended");
+                websocketManager.SendVotePhaseTimerEnded();
+            }
+        }
+    }
+
+
+    public void StartVotePhaseTimer()
+    {
+        Debug.Log("Timer started");
+        if (timer > 0)
+        {
+            timer -= Time.deltaTime;
+            if (timer <= 0)
+            {
+                Debug.Log("Timer ended");
+                websocketManager.SendVotePhaseTimerEnded();
             }
         }
     }
