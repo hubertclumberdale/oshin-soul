@@ -37,7 +37,6 @@ root.render(
         }}
       />
       <CssBaseline />
-      <CssBaseline />
     </CssVarsProvider>
 
     <App />

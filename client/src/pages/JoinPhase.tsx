@@ -1,14 +1,22 @@
 import { Box } from "@mui/joy";
-import React from "react";
-import Join from "src/components/join";
+import React, { useState } from "react";
 import { SocketEvent, SocketMessage } from "src/types";
+import { Button, Input } from "@mui/joy";
 
 interface JoinPhaseProps {
   ws: WebSocket;
 }
 
 const JoinPhase = ({ ws }: JoinPhaseProps) => {
-  const joinRoom = (roomId: string) => {
+  const [roomId, setRoomId] = useState("");
+
+  const handleRoomInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRoomId(event.target.value);
+  };
+
+  const handleJoinRoomClick = () => {
     if (!ws) return;
 
     const message: SocketMessage = {
@@ -31,8 +39,17 @@ const JoinPhase = ({ ws }: JoinPhaseProps) => {
         justifyContent: "center",
         alignItems: "center",
       }}
+      className="JoinPhase"
     >
-      <Join joinRoom={joinRoom} />
+      <Input
+        size="lg"
+        value={roomId}
+        onChange={handleRoomInputChange}
+        placeholder="Insert room id"
+      />
+      <Button size="lg" onClick={handleJoinRoomClick}>
+        Join room
+      </Button>
     </Box>
   );
 };

@@ -1,23 +1,23 @@
-import { useEffect, useState } from "react";
-import "./App.css";
-import Lobby from "./components/lobby";
-import { Phase, SocketBroadcast, SocketEvent, SocketMessage } from "src/types";
-import Movement from "./components/movement";
-import Join from "src/components/join";
-import Compose from "src/components/compose";
-import JoinPhase from "./pages/JoinPhase";
 import "@fontsource/inter";
 import { Box } from "@mui/joy";
+import { useEffect, useState } from "react";
+import { Phase, SocketBroadcast, SocketEvent, SocketMessage } from "src/types";
+import "./App.css";
 import AdminPanel from "./components/AdminPanel";
+import JoinPhase from "./pages/JoinPhase";
 import LobbyPhase from "./pages/LobbyPhase";
+import MovementPhase from "./pages/MovementPhase";
+import ComposePhase from "./pages/ComposePhase";
 
 function App() {
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [gameMode, setGameMode] = useState<string>("");
   const [roomId, setRoomId] = useState<string>();
-  const [error, setError] = useState<string>("");
   const [ready, setReady] = useState<boolean>(false);
   const [playerId, setPlayerId] = useState<string>();
+
+  // TODO error handling
+  // const [error, setError] = useState<string>("");
 
   useEffect(() => {
     const websocket = new WebSocket("ws://localhost:7002");
@@ -42,7 +42,6 @@ function App() {
 
     ws.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      console.log("WebSocket message:", message);
       switch (message.event) {
         case SocketBroadcast.RoomCreated:
           console.log("Room created", message.data.roomId);
@@ -58,7 +57,8 @@ function App() {
           break;
         case SocketBroadcast.RoomNotFound:
           console.log("Room not found");
-          setError("Room not found");
+          // TODO error handling
+          // setError("Room not found");
 
           break;
         case SocketBroadcast.MovementPhase:
@@ -76,18 +76,6 @@ function App() {
       }
     };
   }, [ws]);
-
-  const joinRoom = (roomId: string) => {
-    if (!ws) return;
-
-    const message: SocketMessage = {
-      event: SocketEvent.JoinRoom,
-      data: {
-        roomId,
-      },
-    };
-    ws.send(JSON.stringify(message));
-  };
 
   const toggleReady = () => {
     if (!ws) return;
@@ -142,34 +130,33 @@ function App() {
     >
       {ws ? (
         <>
-          <AdminPanel ws={ws} roomId={roomId} />
+          <AdminPanel
+            ws={ws}
+            roomId={roomId}
+            endMovementTimer={endMovementTimer}
+          />
           {gameMode === Phase.Join && <JoinPhase ws={ws} />}
           {gameMode === Phase.Lobby && (
-            <LobbyPhase ready={ready} toggleReady={toggleReady} />
+            <LobbyPhase
+              ready={ready}
+              toggleReady={toggleReady}
+              onMovement={onMovement}
+            />
           )}
+          {gameMode === Phase.Movement && (
+            <MovementPhase onMovement={onMovement} />
+          )}
+          {gameMode === Phase.Compose && <ComposePhase />}
         </>
       ) : (
         <div>Connecting to webSocket..</div>
       )}
 
-      {/* <h2>Utilities</h2>
-      <h3>Room id: {roomId}</h3>
-      <button onClick={createTestRoom}>Create Test Room </button>
-      <button onClick={endMovementTimer}>End Movement Timer</button>
-      <hr></hr>
-      {error && <div>{error}</div>}
-      {!ws && <div>Connecting to server...</div>}
-
-      {gameMode === Phase.Join && <Join joinRoom={joinRoom} />}
-      {gameMode === Phase.Lobby && (
-        <Lobby ready={ready} toggleReady={toggleReady} />
-      )}
-      {gameMode === Phase.Movement && <Movement onMovement={onMovement} />}
-
-      {gameMode === Phase.Compose && <Compose />} */}
-      {/* {gameMode === Mode.Vote && <Lobby />}
-      {gameMode === Mode.Win && <Lobby />}
-      {gameMode === Mode.End && <Lobby />} */}
+      {/* TODO */}
+      {/* {error && <div>{error}</div>} */}
+      {/* {gameMode === Mode.Vote && <Lobby />} */}
+      {/* {gameMode === Mode.Win && <Lobby />} */}
+      {/* {gameMode === Mode.End && <Lobby />} */}
     </Box>
   );
 }

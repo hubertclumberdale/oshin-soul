@@ -1,13 +1,14 @@
-import { Box, Button, Card, Chip, Typography } from "@mui/joy";
+import { Button, Card, Chip } from "@mui/joy";
 import React from "react";
 import { SocketEvent } from "src/types";
 
 interface AdminPanelProps {
   ws: WebSocket;
   roomId: string | undefined;
+  endMovementTimer: () => void;
 }
 
-const AdminPanel = ({ ws, roomId }: AdminPanelProps) => {
+const AdminPanel = ({ ws, roomId, endMovementTimer }: AdminPanelProps) => {
   const createTestRoom = () => {
     if (!ws) return;
 
@@ -20,11 +21,18 @@ const AdminPanel = ({ ws, roomId }: AdminPanelProps) => {
   };
 
   return (
-    <Card orientation="horizontal" sx={{ justifyContent: "space-between" }}>
-      <Button size="sm" onClick={createTestRoom}>
-        Create Room
-      </Button>
-      <Chip>{roomId ? roomId : "No Room Id"}</Chip>
+    <Card size="sm">
+      <Card size="sm" orientation="horizontal">
+        <Button size="sm" onClick={createTestRoom}>
+          Create Room
+        </Button>
+        <Chip>{roomId ? roomId : "No Room Id"}</Chip>
+      </Card>
+      <Card size="sm" orientation="horizontal">
+        <Button size="sm" onClick={endMovementTimer}>
+          End Movement Timer
+        </Button>
+      </Card>
     </Card>
   );
 };
