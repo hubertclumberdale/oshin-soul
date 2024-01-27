@@ -21,6 +21,7 @@ const ComposePhase = ({ sentence, words, onSubmit }: ComposePhaseProps) => {
   const [localSentence, setLocalSentence] = useState<string[]>([]);
   const [originalGrid, setOriginalGrid] = useState<GridWord[]>([]);
   const [grid, setGrid] = useState<GridWord[]>([]);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
 
   useEffect(() => {
     setLocalSentence(sentence.split(" "));
@@ -63,6 +64,7 @@ const ComposePhase = ({ sentence, words, onSubmit }: ComposePhaseProps) => {
   };
 
   const handleSubmit = () => {
+    setHasSubmitted(true);
     const sentenceString = localSentence.join(" ");
     onSubmit(sentenceString);
   };
@@ -126,7 +128,10 @@ const ComposePhase = ({ sentence, words, onSubmit }: ComposePhaseProps) => {
           </AnimatePresence>
         </Box>
       </Card>
-      <Button onClick={handleSubmit} disabled={localSentence.includes("X")}>
+      <Button
+        onClick={handleSubmit}
+        disabled={hasSubmitted || localSentence.includes("X")}
+      >
         Submit
       </Button>
     </Box>
