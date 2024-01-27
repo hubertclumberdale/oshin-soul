@@ -29,7 +29,7 @@ Player submission
 */
 import WebSocket from 'ws';
 import { Color, Phase, Player, Room, SocketBroadcast, SocketEvent, SocketMessage } from '../types';
-import { createRoom, joinRoom } from './events';
+import { onCreateRoom, onJoinRoom, onMovementPhaseTimerFinished, onPlayerChoice, onPlayerDisconnected, onPlayerMovement, onPlayerReady } from './events';
 const wss = new WebSocket.Server({ port: 7002 });
 
 const rooms: Room[] = [];
@@ -45,7 +45,7 @@ wss.on('connection', (ws: WebSocket) => {
         switch (event) {
             case SocketEvent.CreateRoom: {
 
-                createRoom({
+                onCreateRoom({
                     ws,
                     wss,
                     rooms
@@ -55,7 +55,7 @@ wss.on('connection', (ws: WebSocket) => {
             }
 
             case SocketEvent.JoinRoom: {
-                joinRoom({
+                onJoinRoom({
                     ws,
                     wss,
                     rooms,
@@ -66,115 +66,46 @@ wss.on('connection', (ws: WebSocket) => {
             }
 
             case SocketEvent.PlayerReady: {
-                console.log('PlayerReady event triggered in room:', data.roomId);
-                const room = rooms.find((room) => room.id == data.roomId);
-                if (room) {
-                    console.log(room.players)
-                    const player = room.players.find((player) => player.id === data.playerId);
-                    if (player) {
-                        console.log('Player found:', player);
-                        const { ready } = data
-                        player.ready = ready;
-                        if (ready) {
-                            console.log('Player is ready:', player);
-                            const allPlayersReady = room.players.every((player) => player.ready);
-                            if (allPlayersReady) {
-                                console.log('All players are ready');
-                                room.gameStarted = true;
-                                room.currentMode = Phase.Movement;
-                                const gameStarted: SocketMessage = { event: SocketBroadcast.MovementPhase, data: { roomId: data.roomId } }
-                                const startTimer: SocketMessage = { event: SocketBroadcast.StartMovementPhaseTimer, data: { roomId: data.roomId } }
-                                wss.clients.forEach((client) => {
-                                    if (client.readyState === WebSocket.OPEN) {
-                                        client.send(JSON.stringify(gameStarted));
-                                        client.send(JSON.stringify(startTimer));
-                                    }
-                                });
-                            }
-                        } else {
-                            console.log('Player is not ready:', player);
-                        }
-                    } else {
-                        console.log('Player not found');
-                    }
-                } else {
-                    console.log('Room not found');
-                    const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
-                    ws.send(JSON.stringify(message));
-                }
+
+                onPlayerReady({
+                    ws,
+                    wss,
+                    rooms,
+                    data
+                })
                 break;
+
+
             }
 
             case SocketEvent.PlayerMovement: {
-                console.log('PlayerMovement event triggered in room:', data.roomId);
-                const room = rooms.find((room) => room.id == data.roomId);
-                if (room) {
-                    const player = room.players.find((player) => player.id === data.playerId);
-                    if (player) {
-                        const { direction } = data
-                        const message: SocketMessage = { event: SocketBroadcast.PlayerMovement, data: { roomId: data.roomId, playerId: data.playerId, direction } }
-                        wss.clients.forEach((client) => {
-                            if (client.readyState === WebSocket.OPEN) {
-                                client.send(JSON.stringify(message));
-                            }
-                        });
-                    } else {
-                        console.log('Player not found');
-                    }
-                } else {
-                    console.log('Room not found');
-                    const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
-                    ws.send(JSON.stringify(message));
-                }
+                onPlayerMovement({
+                    ws,
+                    wss,
+                    rooms,
+                    data
+                })
                 break;
             }
 
             case SocketEvent.MovementPhaseTimerFinished: {
-                console.log('TimerFinished event triggered in room:', data.roomId);
-                const room = rooms.find((room) => room.id == data.roomId);
-                if (room) {
-                    const message: SocketMessage = { event: SocketBroadcast.ComposePhase, data: { roomId: data.roomId } }
-                    wss.clients.forEach((client) => {
-                        if (client.readyState === WebSocket.OPEN) {
-                            client.send(JSON.stringify(message));
-                        }
-                    });
-                } else {
-                    console.log('Room not found');
-                    const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
-                    ws.send(JSON.stringify(message));
-                }
+                onMovementPhaseTimerFinished({
+                    ws,
+                    wss,
+                    rooms,
+                    data
+                })
+
                 break;
             }
 
             case SocketEvent.PlayerChoice: {
-                console.log('PlayerChoice event triggered in room:', data.roomId);
-                const room = rooms.find((room) => room.id == data.roomId);
-                if (room) {
-                    const player = room.players.find((player) => player.id === data.playerId);
-                    if (player) {
-                        const { choice } = data
-                        player.choice = choice;
-                        const allPlayersSubmitted = room.players.every((player) => player.choice !== '');
-                        if (allPlayersSubmitted) {
-                            console.log('All players have submitted their choice');
-                            room.currentMode = Phase.Vote;
-                            const message: SocketMessage = { event: SocketBroadcast.VotePhase, data: { roomId: data.roomId } }
-                            wss.clients.forEach((client) => {
-                                if (client.readyState === WebSocket.OPEN) {
-                                    client.send(JSON.stringify(message));
-                                }
-                            });
-                        }
-
-                    } else {
-                        console.log('Player not found');
-                    }
-                } else {
-                    console.log('Room not found');
-                    const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
-                    ws.send(JSON.stringify(message));
-                }
+                onPlayerChoice({
+                    ws,
+                    wss,
+                    rooms,
+                    data
+                })
                 break;
             }
 
@@ -185,16 +116,11 @@ wss.on('connection', (ws: WebSocket) => {
     });
 
     ws.on('close', () => {
-        console.log('A user disconnected');
-        const room = rooms.find((r) => r.players.some((p) => p.id === ws.id));
-        if (room) {
-            room.players = room.players.filter((p) => p.id !== ws.id);
-            wss.clients.forEach((client) => {
-                if (client.readyState === WebSocket.OPEN) {
-                    client.send(JSON.stringify({ event: SocketBroadcast.PlayerLeft, data: ws.id }));
-                }
-            });
-        }
+        onPlayerDisconnected({
+            ws,
+            wss,
+            rooms
+        })
     });
 });
 
