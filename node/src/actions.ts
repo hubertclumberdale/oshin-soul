@@ -1,6 +1,7 @@
 import WebSocket from 'ws'
 import { Color, Direction, Phase, Player, Room, SocketBroadcast, SocketMessage } from "../types";
 import { questions } from "../config/questions";
+import { packs } from '../config/packs';
 
 function generateId(): string {
     return `${Math.floor(Math.random() * 1000)}`
@@ -85,6 +86,7 @@ export const chooseSentence = ({
 
 export const addWordsToPlayer = ({ obtainedPack, player }: { obtainedPack: string, player: Player }) => {
     const words = getWordsFromPack({ obtainedPack })
+    console.log(words)
     player.words.push(...words);
 }
 

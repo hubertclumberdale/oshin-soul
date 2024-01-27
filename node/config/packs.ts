@@ -4,7 +4,7 @@ interface Pack {
     verbs: string[]
 }
 
-const packs: Pack[] =
+export const packs: Pack[] =
     [
         {
             "type": "animals",
