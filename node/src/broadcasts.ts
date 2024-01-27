@@ -1,19 +1,22 @@
 import WebSocket from "ws";
 import { Phase, Player, Room, SocketBroadcast, SocketMessage } from "../types";
 
+
 export const startMovementPhase = (
     {
         wss,
-        room
+        room,
+        sentence
     }: {
         wss: WebSocket.Server,
         room: Room
+        sentence: string
     }
 ) => {
     console.log('Starting movement phase')
     room.gameStarted = true;
     room.currentMode = Phase.Movement;
-    const gameStarted: SocketMessage = { event: SocketBroadcast.MovementPhase, data: { roomId: room.id } }
+    const gameStarted: SocketMessage = { event: SocketBroadcast.MovementPhase, data: { roomId: room.id, sentence } }
     const startTimer: SocketMessage = { event: SocketBroadcast.StartMovementPhaseTimer, data: { roomId: room.id } }
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {

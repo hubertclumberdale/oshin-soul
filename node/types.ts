@@ -29,6 +29,8 @@ export interface SocketData {
     playerId: string
     direction: Direction
     choice: string
+    sentence: string
+    obtainedPack: string
 }
 
 export interface Direction {
@@ -70,6 +72,7 @@ export enum SocketEvent {
     PlayerMovement = 'player-movement',
     MovementPhaseTimerFinished = 'movement-phase-timer-finished',
     PlayerChoice = 'player-choice',
+    PlayerPickUp = 'player-pick-up',
 }
 
 export enum SocketBroadcast {

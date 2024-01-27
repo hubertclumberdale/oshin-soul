@@ -1,5 +1,6 @@
 import WebSocket from 'ws'
 import { Color, Direction, Phase, Player, Room, SocketBroadcast, SocketMessage } from "../types";
+import { questions } from "../config/questions";
 
 function generateId(): string {
     return `${Math.floor(Math.random() * 1000)}`
@@ -69,4 +70,24 @@ export const movePlayer = ({
             client.send(JSON.stringify(message));
         }
     });
+}
+export const chooseSentence = ({
+    room
+}: {
+    room: Room
+}) => {
+    const randomIndex = Math.floor(Math.random() * questions.length);
+    const sentence = questions[randomIndex]
+    room.incompleteSentence = sentence
+    return sentence
+}
+
+export const addWordsToPlayer = ({ obtainedPack, player }: { obtainedPack: string, player: Player }) => {
+    const words = getWordsFromPack({ obtainedPack })
+    player.words.push(...words);
+}
+
+const getWordsFromPack = ({ obtainedPack }: { obtainedPack: string }) => {
+    const pack = questions.find((question) => question === obtainedPack);
+    return pack
 }

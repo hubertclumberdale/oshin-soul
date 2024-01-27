@@ -2,7 +2,7 @@ import WebSocket from 'ws';
 
 import { Phase, Room, SocketBroadcast, SocketData, SocketMessage } from "../types";
 import { playerJoinedRoom, startComposePhase, startMovementPhase, startVotePhase } from './broadcasts';
-import { addNewPlayer, createRoom, movePlayer } from './actions';
+import { chooseSentence, addNewPlayer, createRoom, movePlayer, addWordsToPlayer } from './actions';
 
 export const onCreateRoom = ({
     ws,
@@ -79,10 +79,14 @@ export const onPlayerReady = (
                 const allPlayersReady = room.players.every((player) => player.ready);
                 if (allPlayersReady) {
                     console.log('All players are ready');
+                    const sentence = chooseSentence({
+                        room
+                    })
 
                     startMovementPhase({
                         wss,
-                        room
+                        room,
+                        sentence
                     })
                 }
             } else {
@@ -151,6 +155,36 @@ export const onMovementPhaseTimerFinished = (
             wss,
             room
         })
+    } else {
+        console.log('Room not found');
+        const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
+        ws.send(JSON.stringify(message));
+    }
+}
+
+export const onPlayerPickUp = ({
+    ws,
+    rooms,
+    data
+}: {
+    ws: WebSocket,
+    wss: WebSocket.Server,
+    rooms: Room[]
+    data: Partial<SocketData>
+}) => {
+    console.log('PlayerPickUp event triggered in room:', data.roomId);
+    const room = rooms.find((room) => room.id == data.roomId);
+    if (room) {
+        const player = room.players.find((player) => player.id === data.playerId);
+
+        if (player) {
+            addWordsToPlayer({
+                obtainedPack: data.obtainedPack,
+                player,
+            })
+        } else {
+            console.log('Player not found');
+        }
     } else {
         console.log('Room not found');
         const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }

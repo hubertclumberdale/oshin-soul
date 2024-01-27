@@ -28,8 +28,8 @@ Player movement using x, y
 Player submission
 */
 import WebSocket from 'ws';
-import { Color, Phase, Player, Room, SocketBroadcast, SocketEvent, SocketMessage } from '../types';
-import { onCreateRoom, onJoinRoom, onMovementPhaseTimerFinished, onPlayerChoice, onPlayerDisconnected, onPlayerMovement, onPlayerReady } from './events';
+import { Room, SocketEvent, SocketMessage } from '../types';
+import { onCreateRoom, onJoinRoom, onMovementPhaseTimerFinished, onPlayerChoice, onPlayerDisconnected, onPlayerMovement, onPlayerPickUp, onPlayerReady } from './events';
 const wss = new WebSocket.Server({ port: 7002 });
 
 const rooms: Room[] = [];
@@ -50,7 +50,6 @@ wss.on('connection', (ws: WebSocket) => {
                     wss,
                     rooms
                 })
-
                 break;
             }
 
@@ -62,11 +61,9 @@ wss.on('connection', (ws: WebSocket) => {
                     data
                 })
                 break;
-
             }
 
             case SocketEvent.PlayerReady: {
-
                 onPlayerReady({
                     ws,
                     wss,
@@ -74,8 +71,6 @@ wss.on('connection', (ws: WebSocket) => {
                     data
                 })
                 break;
-
-
             }
 
             case SocketEvent.PlayerMovement: {
@@ -95,12 +90,21 @@ wss.on('connection', (ws: WebSocket) => {
                     rooms,
                     data
                 })
-
                 break;
             }
 
             case SocketEvent.PlayerChoice: {
                 onPlayerChoice({
+                    ws,
+                    wss,
+                    rooms,
+                    data
+                })
+                break;
+            }
+
+            case SocketEvent.PlayerPickUp: {
+                onPlayerPickUp({
                     ws,
                     wss,
                     rooms,
