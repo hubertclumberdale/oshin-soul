@@ -1,7 +1,7 @@
 node_modules
 node/dist/
 
-unity/Oshin/[Ll]ibrary/
+*unity/Oshin/[Ll]ibrary/
 unity/Oshin/[Tt]emp/
 unity/Oshin/[Oo]bj/
 unity/Oshin/[Bb]uild/

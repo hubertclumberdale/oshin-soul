@@ -35,7 +35,7 @@ function App() {
   // const [error, setError] = useState<string>("");
 
   useEffect(() => {
-    const websocket = new WebSocket("ws://localhost:7002");
+    const websocket = new WebSocket("ws://192.168.1.59:7002");
     setWs(websocket);
   }, []);
 
@@ -309,7 +309,7 @@ function App() {
               />
             </>
           )}
-
+          {/* Phase 6 - Game Over */}
           {gameMode === Phase.GameOver && (
             <GameOver players={players}></GameOver>
           )}
@@ -317,12 +317,6 @@ function App() {
       ) : (
         <div>Connecting to webSocket..</div>
       )}
-
-      {/* TODO */}
-      {/* {error && <div>{error}</div>} */}
-      {/* {gameMode === Mode.Vote && <Lobby />} */}
-      {/* {gameMode === Mode.Win && <Lobby />} */}
-      {/* {gameMode === Mode.End && <Lobby />} */}
     </Box>
   );
 }
