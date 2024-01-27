@@ -71,10 +71,14 @@ const ComposePhase = ({ sentence, words, onSubmit }: ComposePhaseProps) => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: 2,
+        gap: 1,
+        overflowY: "auto",
       }}
     >
-      <Card orientation="horizontal" sx={{ minWidth: "100%", height: "50%" }}>
+      <Card
+        orientation="horizontal"
+        sx={{ minWidth: "100%", flexGrow: 1, overflowY: "auto" }}
+      >
         <Sentence
           sentence={localSentence}
           words={words}
@@ -84,7 +88,12 @@ const ComposePhase = ({ sentence, words, onSubmit }: ComposePhaseProps) => {
       </Card>
       <Card
         orientation="horizontal"
-        sx={{ flexWrap: "wrap", minWidth: "100%", height: "50%" }}
+        sx={{
+          flexWrap: "wrap",
+          minWidth: "100%",
+          flexGrow: 1,
+          overflowY: "auto",
+        }}
       >
         <Box
           sx={{
