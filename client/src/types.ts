@@ -38,6 +38,8 @@ export interface SocketData {
     sentence: string
     obtainedPack: string
     words: string[]
+    roundNumber: number
+    choices: Choice[]
 }
 
 export interface Direction {

@@ -8,6 +8,7 @@ import JoinPhase from "./pages/JoinPhase";
 import LobbyPhase from "./pages/LobbyPhase";
 import MovementPhase from "./pages/MovementPhase";
 import ComposePhase from "./pages/ComposePhase";
+import VotePhase from "src/pages/VotePhase";
 
 function App() {
   const [ws, setWs] = useState<WebSocket | null>(null);
@@ -84,9 +85,15 @@ function App() {
           console.log("Player words received");
           console.log(message.data.words);
           const words = message.data.words;
-          if(words){
+          if (words) {
             setWords(words);
           }
+          break;
+
+        case SocketBroadcast.VotePhase:
+          console.log("Vote phase started");
+          setGameMode(Phase.Vote);
+
           break;
         default:
           break;
@@ -150,7 +157,7 @@ function App() {
   const addPackToPlayer = () => {
     if (!ws) return;
 
-    const packs = ['animals', 'jail', 'holy', 'napoletano', 'slurs']
+    const packs = ["animals", "jail", "holy", "napoletano", "slurs"];
     const randomChosenPack = packs[Math.floor(Math.random() * packs.length)];
     const message: SocketMessage = {
       event: SocketEvent.PlayerPickUp,
@@ -208,6 +215,27 @@ function App() {
               words={words}
             />
           )}
+          <VotePhase
+            choices={[
+              { choice: "the quick brown fox", playerId: "123", votes: 0 },
+              { choice: "jumps over the lazy dog", playerId: "232", votes: 0 },
+              {
+                choice: "lorem ipsum dolor sit amet",
+                playerId: "3223",
+                votes: 0,
+              },
+              {
+                choice: "consectetur adipiscing elit",
+                playerId: "4123",
+                votes: 0,
+              },
+            ]}
+            onSubmit={(votes) => {
+              console.log(votes);
+            }}
+          />
+          {/* Phase 4 - Compose */}
+          {gameMode === Phase.Vote && <></>}
         </>
       ) : (
         <div>Connecting to webSocket..</div>
