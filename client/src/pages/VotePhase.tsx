@@ -66,7 +66,7 @@ const VotePhase = ({ choices, onSubmit }: VotePhaseProps) => {
               key={choice.playerId}
               sx={{ minWidth: "70%", userSelect: "none", textAlign: "center" }}
             >
-              {choice.choice} lorem ipsum dolor sit amet consectetur adipisicing
+              {choice.choice}
             </Card>
             <Box sx={{ display: "flex", gap: 1 }}>
               <IconButton
