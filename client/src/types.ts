@@ -22,13 +22,14 @@ export interface Room {
     winner: string | null;
     roundNumber: number
 }
-
 export interface SocketData {
     roomId: string
     ready: boolean
     playerId: string
     direction: Direction
+    choice: string
 }
+
 
 export interface Direction {
     x: number
@@ -57,7 +58,8 @@ export interface Player {
     score: number;
     color: Color;
     ready: boolean,
-    submission: string
+    choice: string
+    words: string[]
 }
 
 
@@ -67,6 +69,8 @@ export enum SocketEvent {
     PlayerReady = 'player-ready',
     PlayerMovement = 'player-movement',
     MovementPhaseTimerFinished = 'movement-phase-timer-finished',
+    PlayerChoice = 'player-choice',
+
 }
 
 export enum SocketBroadcast {

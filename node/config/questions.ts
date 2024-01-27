@@ -2,7 +2,7 @@ interface Question {
     questions: string[],
 }
 
-const questions: Question[] =
+export const questions: Question[] =
     [
         {
             "questions": [
@@ -83,14 +83,4 @@ const questions: Question[] =
                 "People who live in X houses shouldn't throw X, be mindful.",
             ],
         }
-
-
-
-
-
-
-
-
-
-
     ]

@@ -117,6 +117,19 @@ function App() {
     );
   };
 
+  const onSentenceSubmit = (sentence: string) => {
+    if (!ws) return;
+    const message: SocketMessage = {
+      event: SocketEvent.PlayerChoice,
+      data: {
+        roomId,
+        playerId,
+        choice: sentence,
+      },
+    };
+    ws.send(JSON.stringify(message));
+  };
+
   return (
     <Box
       sx={{
@@ -146,7 +159,13 @@ function App() {
           {gameMode === Phase.Movement && (
             <MovementPhase onMovement={onMovement} />
           )}
-          {gameMode === Phase.Compose && <ComposePhase />}
+          {gameMode === Phase.Compose && (
+            <ComposePhase
+              onSubmit={onSentenceSubmit}
+              sentence={"The X jumps over the X"}
+              words={["fuck", "ass", "dead", "fox", "dog", "pope"]}
+            />
+          )}
         </>
       ) : (
         <div>Connecting to webSocket..</div>

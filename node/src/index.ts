@@ -29,17 +29,11 @@ Player submission
 */
 import WebSocket from 'ws';
 import { Color, Phase, Player, Room, SocketBroadcast, SocketEvent, SocketMessage } from '../types';
+import { createRoom } from './events';
 const wss = new WebSocket.Server({ port: 7002 });
 
 const rooms: Room[] = [];
 
-function getRandomColor(room: Room): Color {
-    const colors = Object.values(Color);
-    const pickedColors = room.players.map((player) => player.color);
-    const availableColors = colors.filter((color) => !pickedColors.includes(color));
-    const randomIndex = Math.floor(Math.random() * availableColors.length);
-    return availableColors[randomIndex];
-}
 
 wss.on('connection', (ws: WebSocket) => {
     console.log('A user connected');
@@ -50,46 +44,20 @@ wss.on('connection', (ws: WebSocket) => {
 
         switch (event) {
             case SocketEvent.CreateRoom: {
-                console.log('CreateRoom event triggered in room:', ws.id);
-                // Create a new room
-                const roomId = generateId();
-                const room: Room = {
-                    id: roomId,
-                    players: [],
-                    unity: ws.id,
-                    gameStarted: false,
-                    incompleteSentence: '',
-                    turns: 0,
-                    currentMode: Phase.Lobby,
-                    playersAreMoving: false,
-                    winner: null,
-                    roundNumber: 0,
-                };
-                rooms.push(room);
-                ws.send(JSON.stringify({ event: SocketBroadcast.RoomCreated, data: { roomId } }));
-                console.log('Room created:', room);
+
+                createRoom({
+                    ws,
+                    wss,
+                    rooms
+                })
+
                 break;
             }
 
             case SocketEvent.JoinRoom: {
-                console.log('JoinRoom event triggered in room:', data.roomId);
-                console.log(data.roomId)
-                console.log(rooms)
-                const room = rooms.find((room) => room.id == data.roomId);
-                console.log(room)
-                if (room) {
-                    const randomColor = getRandomColor(room);
-                    const player: Player = { id: generateId(), score: 0, ready: false, color: randomColor, submission: '' };
-                    room.players.push(player);
-                    console.log('Player joined room:', player);
-                    const message: SocketMessage = { event: SocketBroadcast.RoomJoined, data: { roomId: data.roomId, playerId: player.id } }
-                    ws.send(JSON.stringify(message));
-                } else {
-                    console.log('Room not found');
-                    const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
-                    ws.send(JSON.stringify(message));
-                }
+                joinRoom()
                 break;
+
             }
 
             case SocketEvent.PlayerReady: {
@@ -174,6 +142,37 @@ wss.on('connection', (ws: WebSocket) => {
                 break;
             }
 
+            case SocketEvent.PlayerChoice: {
+                console.log('PlayerChoice event triggered in room:', data.roomId);
+                const room = rooms.find((room) => room.id == data.roomId);
+                if (room) {
+                    const player = room.players.find((player) => player.id === data.playerId);
+                    if (player) {
+                        const { choice } = data
+                        player.choice = choice;
+                        const allPlayersSubmitted = room.players.every((player) => player.choice !== '');
+                        if (allPlayersSubmitted) {
+                            console.log('All players have submitted their choice');
+                            room.currentMode = Phase.Vote;
+                            const message: SocketMessage = { event: SocketBroadcast.VotePhase, data: { roomId: data.roomId } }
+                            wss.clients.forEach((client) => {
+                                if (client.readyState === WebSocket.OPEN) {
+                                    client.send(JSON.stringify(message));
+                                }
+                            });
+                        }
+
+                    } else {
+                        console.log('Player not found');
+                    }
+                } else {
+                    console.log('Room not found');
+                    const message: SocketMessage = { event: SocketBroadcast.RoomNotFound, }
+                    ws.send(JSON.stringify(message));
+                }
+                break;
+            }
+
             default:
                 console.log('Unknown event:', event);
                 break;
@@ -197,9 +196,5 @@ wss.on('connection', (ws: WebSocket) => {
 
 
 wss.on('listening', () => {
-    console.log('Node server started on on 4000')
+    console.log('Node server started on on 7002')
 })
-
-function generateId(): string {
-    return `${Math.floor(Math.random() * 1000)}`
-}
