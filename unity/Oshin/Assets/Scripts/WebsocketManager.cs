@@ -59,7 +59,11 @@ public class WebsocketManager : MonoBehaviour
     }
 
     public void CreateRoom (){
-        
+        Debug.Log("Creating room");
+        SocketMessage message = new SocketMessage();
+        message.command = "create-room";
+        ws.Send(JsonUtility.ToJson(message));
+
     }
 
     void OnMessageHandler(object sender, MessageEventArgs e)
@@ -76,8 +80,8 @@ public class WebsocketManager : MonoBehaviour
         }
 
         if(socketMessage.command.ToString() == "start-movement-phase-timer"){
-            _actions.Enqueue(() => StartTimer());
-        }    
+            _actions.Enqueue(() => StartMovementPhaseTimer());
+        }
     }
 
     private void SetGameMode(string gameMode){
@@ -89,12 +93,12 @@ public class WebsocketManager : MonoBehaviour
         this.roomId = roomId;
     }
     
-    private void StartTimer(){
-        gameManager.StartTimer();
+    private void StartMovementPhaseTimer(){
+        gameManager.StartMovementPhaseTimer();
     }
 
     public void SendMovementPhaseTimerEnded(){
-        Debug.Log("Sending movement-phase-timer-ended");
+        Debug.Log("Sending movement-phase-timer-finished");
         SocketMessage message = new SocketMessage();
         message.command = "movement-phase-timer-finished";
         message.data = new SocketData();
@@ -102,4 +106,23 @@ public class WebsocketManager : MonoBehaviour
         ws.Send(JsonUtility.ToJson(message));
     }
 
+
+    public void SendComposePhaseTimerEnded(){
+        Debug.Log("Sending compose-phase-timer-finished");
+        SocketMessage message = new SocketMessage();
+        message.command = "compose-phase-timer-finished";
+        message.data = new SocketData();
+        message.data.roomId = this.roomId;
+        ws.Send(JsonUtility.ToJson(message));
+    }
+
+
+    public void SendVotePhaseTimerEnded(){
+        Debug.Log("Sending vote-phase-timer-finished");
+        SocketMessage message = new SocketMessage();
+        message.command = "vote-phase-timer-finished";
+        message.data = new SocketData();
+        message.data.roomId = this.roomId;
+        ws.Send(JsonUtility.ToJson(message));
+    }
 }
