@@ -3,23 +3,42 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { CssBaseline } from "@mui/material";
-
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
+import { CssBaseline, CssVarsProvider, GlobalStyles } from "@mui/joy";
+import { theme } from "./theme";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <ThemeProvider theme={darkTheme}>
+    <CssVarsProvider defaultMode="dark" theme={theme}>
+      <GlobalStyles
+        styles={{
+          "*::-webkit-scrollbar": {
+            width: "4px",
+          },
+          "*::-webkit-scrollbar-track": {
+            background: "#222",
+          },
+          "*::-webkit-scrollbar-thumb": {
+            background: "#414141",
+            borderRadius: "8px",
+          },
+          "*::-webkit-scrollbar-thumb:hover": {
+            background: "#555",
+          },
+          //set width to 4 if vertical and height to 4 if horizontal
+          "*::-webkit-scrollbar:vertical": {
+            width: "4px",
+          },
+          "*::-webkit-scrollbar:horizontal": {
+            height: "4px",
+          },
+        }}
+      />
       <CssBaseline />
-    </ThemeProvider>
+      <CssBaseline />
+    </CssVarsProvider>
 
     <App />
   </React.StrictMode>

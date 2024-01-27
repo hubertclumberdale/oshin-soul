@@ -5,6 +5,12 @@ import { Phase, SocketBroadcast, SocketEvent, SocketMessage } from "src/types";
 import Movement from "./components/movement";
 import Join from "src/components/join";
 import Compose from "src/components/compose";
+import JoinPhase from "./pages/JoinPhase";
+import "@fontsource/inter";
+import { Box } from "@mui/joy";
+import AdminPanel from "./components/AdminPanel";
+import LobbyPhase from "./pages/LobbyPhase";
+
 function App() {
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [gameMode, setGameMode] = useState<string>("");
@@ -36,7 +42,13 @@ function App() {
 
     ws.onmessage = (event) => {
       const message = JSON.parse(event.data);
+      console.log("WebSocket message:", message);
       switch (message.event) {
+        case SocketBroadcast.RoomCreated:
+          console.log("Room created", message.data.roomId);
+          setRoomId(message.data.roomId);
+
+          break;
         case SocketBroadcast.RoomJoined:
           console.log("Room joined", message.data.roomId);
           setRoomId(message.data.roomId);
@@ -54,7 +66,6 @@ function App() {
           setGameMode(Phase.Movement);
 
           break;
-
         case SocketBroadcast.ComposePhase:
           console.log("Compose phase started");
           setGameMode(Phase.Compose);
@@ -99,21 +110,10 @@ function App() {
       data: {
         roomId,
         direction,
-        playerId
+        playerId,
       },
     };
     ws.send(JSON.stringify(message));
-  };
-
-  const createTestRoom = () => {
-    if (!ws) return;
-
-    ws.send(
-      JSON.stringify({
-        event: SocketEvent.CreateRoom,
-        data: {},
-      })
-    );
   };
 
   const endMovementTimer = () => {
@@ -130,8 +130,29 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <h2>Utilities</h2>
+    <Box
+      sx={{
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        p: 1,
+        bgcolor: "background.level1",
+      }}
+    >
+      {ws ? (
+        <>
+          <AdminPanel ws={ws} roomId={roomId} />
+          {gameMode === Phase.Join && <JoinPhase ws={ws} />}
+          {gameMode === Phase.Lobby && (
+            <LobbyPhase ready={ready} toggleReady={toggleReady} />
+          )}
+        </>
+      ) : (
+        <div>Connecting to webSocket..</div>
+      )}
+
+      {/* <h2>Utilities</h2>
       <h3>Room id: {roomId}</h3>
       <button onClick={createTestRoom}>Create Test Room </button>
       <button onClick={endMovementTimer}>End Movement Timer</button>
@@ -145,11 +166,11 @@ function App() {
       )}
       {gameMode === Phase.Movement && <Movement onMovement={onMovement} />}
 
-      {gameMode === Phase.Compose && <Compose />}
+      {gameMode === Phase.Compose && <Compose />} */}
       {/* {gameMode === Mode.Vote && <Lobby />}
       {gameMode === Mode.Win && <Lobby />}
       {gameMode === Mode.End && <Lobby />} */}
-    </div>
+    </Box>
   );
 }
 

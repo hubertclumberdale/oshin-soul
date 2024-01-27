@@ -1,3 +1,4 @@
+import { Button, Input } from "@mui/joy";
 import React, { useState } from "react";
 
 interface JoinProps {
@@ -11,16 +12,22 @@ const Join = ({ joinRoom }: JoinProps) => {
   };
 
   const handleButtonClick = () => {
-    console.log("Joining room:", inputValue)
+    console.log("Joining room:", inputValue);
     joinRoom(inputValue);
   };
 
   return (
-    <div>
-      <h1>Join</h1>
-      <input type="text" value={inputValue} onChange={handleInputChange} />
-      <button onClick={handleButtonClick}>Join room</button>
-    </div>
+    <>
+      <Input
+        size="lg"
+        value={inputValue}
+        onChange={handleInputChange}
+        placeholder="Insert room number"
+      />
+      <Button size="lg" onClick={handleButtonClick}>
+        Join room
+      </Button>
+    </>
   );
 };
 
