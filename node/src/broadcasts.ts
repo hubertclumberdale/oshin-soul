@@ -40,6 +40,15 @@ export const startComposePhase = ({
             client.send(JSON.stringify(message));
         }
     });
+
+    room.players.forEach((player) => {
+        const playerMessage: SocketMessage = { event: SocketBroadcast.PlayerWords, data: { roomId: room.id, playerId: player.id, words: player.words } }
+        wss.clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify(playerMessage));
+            }
+        });
+    });
 }
 
 export const startVotePhase = ({

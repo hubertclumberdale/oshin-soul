@@ -15,6 +15,7 @@ function App() {
   const [roomId, setRoomId] = useState<string>();
   const [ready, setReady] = useState<boolean>(false);
   const [playerId, setPlayerId] = useState<string>();
+  const [sentence, setSentence] = useState<string>("");
 
   // TODO error handling
   // const [error, setError] = useState<string>("");
@@ -41,7 +42,8 @@ function App() {
     };
 
     ws.onmessage = (event) => {
-      const message = JSON.parse(event.data);
+      const message = JSON.parse(event.data) as SocketMessage;
+      if (!message.event || !message.data) return;
       switch (message.event) {
         case SocketBroadcast.RoomCreated:
           console.log("Room created", message.data.roomId);
@@ -63,7 +65,12 @@ function App() {
           break;
         case SocketBroadcast.MovementPhase:
           console.log("Movement phase started");
-          setGameMode(Phase.Movement);
+          console.log(message.data.sentence);
+          const sentence = message.data.sentence;
+          if (sentence) {
+            setSentence(sentence);
+            setGameMode(Phase.Movement);
+          }
 
           break;
         case SocketBroadcast.ComposePhase:
@@ -130,6 +137,19 @@ function App() {
     ws.send(JSON.stringify(message));
   };
 
+  const addPackToPlayer = () => {
+    if (!ws) return;
+    const message: SocketMessage = {
+      event: SocketEvent.PlayerPickUp,
+      data: {
+        roomId,
+        playerId,
+        obtainedPack: 'animals'
+      },
+    };
+    ws.send(JSON.stringify(message));
+  }
+
   return (
     <Box
       sx={{
@@ -146,7 +166,9 @@ function App() {
           <AdminPanel
             ws={ws}
             roomId={roomId}
+            gameMode={gameMode}
             endMovementTimer={endMovementTimer}
+            addPackToPlayer={addPackToPlayer}
           />
           {/* Phase 1 - insert room number */}
           {gameMode === Phase.Join && <JoinPhase ws={ws} />}
@@ -162,14 +184,14 @@ function App() {
 
           {/* Phase 3 - Movement */}
           {gameMode === Phase.Movement && (
-            <MovementPhase onMovement={onMovement} />
+            <MovementPhase sentence={sentence} onMovement={onMovement} />
           )}
 
           {/* Phase 4 - Compose */}
           {gameMode === Phase.Compose && (
             <ComposePhase
               onSubmit={onSentenceSubmit}
-              sentence={"The X jumps over the X"}
+              sentence={sentence}
               words={["fuck", "ass", "dead", "fox", "dog", "pope"]}
             />
           )}

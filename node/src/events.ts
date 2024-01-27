@@ -206,22 +206,20 @@ export const onPlayerChoice = (
     }
 ) => {
     console.log('PlayerChoice event triggered in room:', data.roomId);
-    const room = rooms.find((room) => room.id == data.roomId);
+    const room = rooms.find((room) => room.id === data.roomId);
     if (room) {
-        const player = room.players.find((player) => player.id === data.playerId);
-        if (player) {
-            const { choice } = data
-            player.choice = choice;
-            const allPlayersSubmitted = room.players.every((player) => player.choice !== '');
-            if (allPlayersSubmitted) {
-                startVotePhase({
-                    wss,
-                    room
-                })
-            }
-
-        } else {
-            console.log('Player not found');
+        room.choices.push({
+            playerId: data.playerId,
+            choice: data.choice,
+            votes: 0
+        });
+        console.log('Room choices:', room.choices);
+        const allPlayersVoted = room.choices.length === room.players.length;
+        if (allPlayersVoted) {
+            startVotePhase({
+                wss,
+                room
+            })
         }
     } else {
         console.log('Room not found');

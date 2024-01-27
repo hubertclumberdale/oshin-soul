@@ -9,6 +9,11 @@ export enum Phase {
     End = 'end',
 }
 
+export interface Choice {
+    playerId: string
+    choice: string
+    votes: number
+}
 // Room Management
 export interface Room {
     id: string;
@@ -20,8 +25,10 @@ export interface Room {
     currentMode: Phase;
     playersAreMoving: boolean;
     winner: string | null;
-    roundNumber: number
+    roundNumber: number;
+    choices: Choice[]
 }
+
 export interface SocketData {
     roomId: string
     ready: boolean
@@ -30,9 +37,8 @@ export interface SocketData {
     choice: string
     sentence: string
     obtainedPack: string
-
+    words: string[]
 }
-
 
 export interface Direction {
     x: number
@@ -61,7 +67,6 @@ export interface Player {
     score: number;
     color: Color;
     ready: boolean,
-    choice: string
     words: string[]
 }
 
@@ -88,5 +93,5 @@ export enum SocketBroadcast {
     VotePhase = 'vote-phase',
     WinPhase = 'win-phase',
     EndPhase = 'end-phase',
-
+    PlayerWords = 'player-words',
 }
