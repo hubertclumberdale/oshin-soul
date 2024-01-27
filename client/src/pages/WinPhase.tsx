@@ -1,3 +1,4 @@
+import WithMotion from "src/hoc/WithMotion";
 import { Choice } from "src/types";
 
 interface WinPhaseProps {
@@ -14,4 +15,4 @@ const WinPhase = ({ winningChoice, onReadyForNextRound }: WinPhaseProps) => {
     </div>
   );
 };
-export default WinPhase;
+export default WithMotion(WinPhase);

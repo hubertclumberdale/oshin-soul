@@ -2,6 +2,9 @@ import { Box, Button, Card, Chip } from "@mui/joy";
 import { useEffect, useState } from "react";
 import Sentence from "src/components/Sentence";
 import WithMotion from "src/hoc/WithMotion";
+import { AnimatePresence, motion } from "framer-motion";
+
+const MotionChip = motion(Chip);
 
 type GridWord = {
   word: string;
@@ -104,18 +107,23 @@ const ComposePhase = ({ sentence, words, onSubmit }: ComposePhaseProps) => {
             flexWrap: "wrap",
           }}
         >
-          {grid.map((wordObj, index) => (
-            <Chip
-              disabled={!localSentence.includes("X")}
-              color="primary"
-              size="lg"
-              key={index}
-              onClick={() => handleGridWordClick(wordObj.word)}
-              sx={{ minHeight: 50 }}
-            >
-              {wordObj.word}
-            </Chip>
-          ))}
+          <AnimatePresence>
+            {grid.map((wordObj, index) => (
+              <MotionChip
+                disabled={!localSentence.includes("X")}
+                color="primary"
+                size="lg"
+                key={index}
+                onClick={() => handleGridWordClick(wordObj.word)}
+                sx={{ minHeight: 50 }}
+                initial={{ opacity: 0, scale: 0, y: 30 }} // Initial state (visible)
+                animate={{ opacity: 1, scale: 1, y: 0 }} // Animate to final state (visible)
+                exit={{ opacity: 0, scale: 0, y: 30 }} // Exit state (hidden)
+              >
+                {wordObj.word}
+              </MotionChip>
+            ))}
+          </AnimatePresence>
         </Box>
       </Card>
       <Button onClick={handleSubmit} disabled={localSentence.includes("X")}>
