@@ -1,7 +1,15 @@
 import "@fontsource/inter";
 import { Box } from "@mui/joy";
 import { useEffect, useState } from "react";
-import { Phase, SocketBroadcast, SocketEvent, SocketMessage } from "src/types";
+import {
+  Choice,
+  Phase,
+  Player,
+  SocketBroadcast,
+  SocketEvent,
+  SocketMessage,
+  Votes,
+} from "src/types";
 import "./App.css";
 import AdminPanel from "./components/AdminPanel";
 import JoinPhase from "./pages/JoinPhase";
@@ -9,6 +17,8 @@ import LobbyPhase from "./pages/LobbyPhase";
 import MovementPhase from "./pages/MovementPhase";
 import ComposePhase from "./pages/ComposePhase";
 import VotePhase from "src/pages/VotePhase";
+import WinPhase from "src/pages/WinPhase";
+import GameOver from "src/pages/GameOver";
 
 function App() {
   const [ws, setWs] = useState<WebSocket | null>(null);
@@ -18,7 +28,9 @@ function App() {
   const [playerId, setPlayerId] = useState<string>();
   const [sentence, setSentence] = useState<string>("");
   const [words, setWords] = useState<string[]>([]);
-
+  const [choices, setChoices] = useState<Choice[]>([]);
+  const [winningChoice, setWinningChoice] = useState<Choice>();
+  const [players, setPlayers] = useState<Player[]>([]);
   // TODO error handling
   // const [error, setError] = useState<string>("");
 
@@ -93,7 +105,29 @@ function App() {
         case SocketBroadcast.VotePhase:
           console.log("Vote phase started");
           setGameMode(Phase.Vote);
+          const choices = message.data.choices;
+          if (choices) {
+            setChoices(choices);
+          }
 
+          break;
+
+        case SocketBroadcast.WinPhase:
+          console.log("Win phase started");
+          setGameMode(Phase.Win);
+          const winningChoice = message.data.winningChoice;
+          if (winningChoice) {
+            setWinningChoice(winningChoice);
+          }
+          break;
+
+        case SocketBroadcast.GameOverPhase:
+          console.log("Game over");
+          setGameMode(Phase.GameOver);
+          const players = message.data.players;
+          if (players) {
+            setPlayers(players);
+          }
           break;
         default:
           break;
@@ -170,6 +204,19 @@ function App() {
     ws.send(JSON.stringify(message));
   };
 
+  const onVotesSubmit = (votes: Votes) => {
+    if (!ws) return;
+    const message: SocketMessage = {
+      event: SocketEvent.VoteSubmitted,
+      data: {
+        roomId,
+        playerId,
+        votes,
+      },
+    };
+    ws.send(JSON.stringify(message));
+  };
+
   return (
     <Box
       sx={{
@@ -217,33 +264,22 @@ function App() {
             />
           )}
 
-          {/* Phase 4 - Compose */}
+          {/* Phase 4 - Vote */}
           {gameMode === Phase.Vote && (
             <>
-              <VotePhase
-                choices={[
-                  { choice: "the quick brown fox", playerId: "123", score: 0 },
-                  {
-                    choice: "jumps over the lazy dog",
-                    playerId: "232",
-                    score: 0,
-                  },
-                  {
-                    choice: "lorem ipsum dolor sit amet",
-                    playerId: "3223",
-                    score: 0,
-                  },
-                  {
-                    choice: "consectetur adipiscing elit",
-                    playerId: "4123",
-                    score: 0,
-                  },
-                ]}
-                onSubmit={(votes) => {
-                  console.log(votes);
-                }}
-              />
+              <VotePhase choices={choices} onSubmit={onVotesSubmit} />
             </>
+          )}
+
+          {/* Phase 5 - Win */}
+          {gameMode === Phase.Win && (
+            <>
+              <WinPhase winningChoice={winningChoice} />
+            </>
+          )}
+
+          {gameMode === Phase.GameOver && (
+            <GameOver players={players}></GameOver>
           )}
         </>
       ) : (

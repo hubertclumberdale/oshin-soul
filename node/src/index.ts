@@ -142,9 +142,6 @@ wss.on('connection', (ws: WebSocket) => {
                 break;
             }
 
-
-
-
             default:
                 console.log('Unknown event:', event);
                 break;

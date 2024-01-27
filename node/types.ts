@@ -6,7 +6,7 @@ export enum Phase {
     Compose = 'compose',
     Vote = 'vote',
     Win = 'win',
-    End = 'end',
+    GameOver = 'game-over',
 }
 
 export type Votes = Record<string, number>
@@ -103,7 +103,7 @@ export enum SocketBroadcast {
     ComposePhase = 'compose-phase',
     VotePhase = 'vote-phase',
     WinPhase = 'win-phase',
-    EndPhase = 'end-phase',
+    GameOverPhase = 'game-over-phase',
     PlayerWords = 'player-words',
     StartComposePhaseTimer = 'start-compose-phase-timer',
     StartVotePhaseTimer = 'start-vote-phase-timer',

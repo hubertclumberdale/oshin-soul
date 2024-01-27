@@ -84,7 +84,9 @@ export const startVotePhase = ({
 }) => {
     console.log('All players have submitted their choice, starting vote phase');
     room.currentMode = Phase.Vote;
-    const message: SocketMessage = { event: SocketBroadcast.VotePhase, data: { roomId: room.id } }
+    const choices = room.choices
+    console.log("Sending choices to players:", choices)
+    const message: SocketMessage = { event: SocketBroadcast.VotePhase, data: { roomId: room.id, choices } }
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(message));
