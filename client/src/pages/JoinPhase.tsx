@@ -60,6 +60,7 @@ const JoinPhase = ({ ws }: JoinPhaseProps) => {
           placeholder="Room ID"
         />
       </Box>
+
       <Box
         sx={{
           minHeight: "50%",

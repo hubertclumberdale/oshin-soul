@@ -1,3 +1,4 @@
+import { Button } from "@mui/joy";
 import WithMotion from "src/hoc/WithMotion";
 import { Choice } from "src/types";
 
@@ -11,7 +12,7 @@ const WinPhase = ({ winningChoice, onReadyForNextRound }: WinPhaseProps) => {
     <div>
       <h1>Win Phase</h1>
       <h3>{winningChoice?.choice}</h3>
-      <button onClick={onReadyForNextRound}>Next Round</button>
+      <Button onClick={onReadyForNextRound}>Next Round</Button>
     </div>
   );
 };
