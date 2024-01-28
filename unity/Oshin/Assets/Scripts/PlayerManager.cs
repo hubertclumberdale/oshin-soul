@@ -33,6 +33,7 @@ public class PlayerManager : MonoBehaviour
         moveDirection *= speed * Time.deltaTime;
         characterController.Move(moveDirection);
          LockPlayerOnY();
+         audioManager.PlayMovement();
     }
 
     void OnTriggerEnter(Collider other)
@@ -43,6 +44,7 @@ public class PlayerManager : MonoBehaviour
             Debug.Log(other.gameObject.name);
             Obstacle obstacle = other.GetComponent<Obstacle>();
             obstacle.Esplodi(transform.position);
+            audioManager.PlayCollide();
         }
         if (other.gameObject.tag == "pickWord")
         {
@@ -55,6 +57,7 @@ public class PlayerManager : MonoBehaviour
             gameManager.SendObtainedPacket(wordText, this.playerId);
 
             Destroy(other.gameObject);
+            audioManager.PlayPowerup();
         }
     }
 
