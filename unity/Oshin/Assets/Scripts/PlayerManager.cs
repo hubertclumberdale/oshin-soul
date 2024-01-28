@@ -12,6 +12,8 @@ public class PlayerManager : MonoBehaviour
 
     private CharacterController characterController;
 
+
+    private GameManager gameManager;
     void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -42,7 +44,7 @@ public class PlayerManager : MonoBehaviour
         {
             TextMesh word = other.GetComponent<TextMesh>();
             //TODO: send to websocket obtainedPacket that is word.text
-
+            gameManager.SendObtainedPacket(word.text, playerId);
 
             Destroy(other.gameObject);
             

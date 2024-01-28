@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Obstacle : MonoBehaviour
 {
-    public string packName;
+    private string packName;
     public GameObject prefabText;
     public Words obstacleNames;
 
@@ -12,7 +12,9 @@ public class Obstacle : MonoBehaviour
     void Start()
     {
         GameManager gameManager = FindObjectOfType<GameManager>();
-
+        int randomIndex = Random.Range(0, obstacleNames.allWords.Length);
+        packName = obstacleNames.allWords[randomIndex];
+        Debug.Log("Pack name: " + packName);
     }
 
     public void Esplodi(Vector3 plPos)
@@ -24,9 +26,7 @@ public class Obstacle : MonoBehaviour
             GameObject textMeshInstance = Instantiate(prefabText, transform.position + new Vector3(0, Random.Range(1, 5), 0), Quaternion.identity);
             textMeshInstance.transform.parent = null;
 
-            int randomIndex = Random.Range(0, obstacleNames.allWords.Length);
-            string randomWord = obstacleNames.allWords[randomIndex];
-            textMeshInstance.GetComponent<TextMesh>().text = randomWord;
+            textMeshInstance.GetComponent<TextMesh>().text = this.packName;
 
             Rigidbody rb = textMeshInstance.GetComponent<Rigidbody>();
             Vector3 randomDirection = transform.position - plPos;

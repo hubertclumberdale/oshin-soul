@@ -177,6 +177,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void SendObtainedPacket(string word, string playerId)
+    {
+        websocketManager.SendObtainedPacket(word, playerId);
+    }
+
 }
 
 [System.Serializable]

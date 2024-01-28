@@ -124,8 +124,8 @@ public class WebsocketManager : MonoBehaviour
 
     private void AddPlayer(string playerId){
         Debug.Log("Adding player: " + playerId);
-/*         gameManager.InstantiatePlayer(playerId);
- */        GenerateObstacles();
+         gameManager.InstantiatePlayer(playerId);
+         GenerateObstacles();
     }
     
     private void StartMovementPhaseTimer()
@@ -192,6 +192,17 @@ public class WebsocketManager : MonoBehaviour
     }
 
     public void SendPlayerPickedUpPack(string playerId, string packName){
+        Debug.Log("Sending player-pick-up");
+        SocketMessage message = new SocketMessage();
+        message.command = "player-pick-up";
+        message.data = new SocketData();
+        message.data.roomId = this.roomId;
+        message.data.playerId = playerId;
+        message.data.obtainedPack = packName;
+        ws.Send(JsonUtility.ToJson(message));
+    }
+
+    public void SendObtainedPacket(string packName, string playerId){
         Debug.Log("Sending player-pick-up");
         SocketMessage message = new SocketMessage();
         message.command = "player-pick-up";
