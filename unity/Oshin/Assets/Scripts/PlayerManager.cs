@@ -12,7 +12,7 @@ public class PlayerManager : MonoBehaviour
 
     private CharacterController characterController;
 
-    private AudioManager audioManager
+    private AudioManager audioManager;
 
 
     private GameManager gameManager;
@@ -20,7 +20,7 @@ public class PlayerManager : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
         GameManager gameManager = FindObjectOfType<GameManager>();
-        audioManager audioManager = FindObjectOfType<AudioManager>();
+        AudioManager audioManager = FindObjectOfType<AudioManager>();
     }
     void Update()
     {

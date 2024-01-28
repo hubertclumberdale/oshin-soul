@@ -13,7 +13,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip movementAudioClip;
     public AudioClip collideAudioClip;
     public AudioClip powerupAudioClip;
-    public AudioClip endtimerAudioClip
+    public AudioClip endtimerAudioClip;
 
 
     public float volume = 1;
