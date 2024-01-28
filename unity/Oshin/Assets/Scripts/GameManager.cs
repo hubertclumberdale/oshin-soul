@@ -5,17 +5,17 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject roomNumber;
+    public Text roomNumber;
 
-    public GameObject roundNumber;
+    public Text roundNumber;
 
-    public GameObject timer;
+    public Text timer;
 
-    public GameObject sentence;
+    public Text sentence;
 
-    public GameObject score;
+    public Text score;
 
-    public GameObject gameModeText;
+    public Text gameModeText;
 
     public GameObject playerPrefab;
     public WebsocketManager websocketManager;
