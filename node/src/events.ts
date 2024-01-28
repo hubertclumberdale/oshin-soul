@@ -52,7 +52,7 @@ export const onJoinRoom = ({
         playerJoinedRoom({
             ws,
             wss,
-            roomId: data.roomId,
+            room,
             player: newPlayer
         })
     } else {

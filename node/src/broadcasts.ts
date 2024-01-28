@@ -117,23 +117,23 @@ export const startVotePhase = ({
 export const playerJoinedRoom = ({
     ws,
     wss,
-    roomId,
+    room,
     player,
 }: {
     ws: WebSocket,
     wss: WebSocket.Server,
-    roomId: string,
+    room: Room,
     player: Player
-}
-
-) => {
+}) => {
     console.log('Player joined room:', player);
-    const message: SocketMessage = { command: SocketBroadcast.RoomJoined, data: { roomId, playerId: player.id } }
+    const message: SocketMessage = { command: SocketBroadcast.RoomJoined, data: { roomId: room.id, playerId: player.id } }
+    ws.send(JSON.stringify(message));
+
     wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
+        if (client.readyState === WebSocket.OPEN && client.id === room.unity) {
             client.send(JSON.stringify(message));
         }
-    })
+    });
 }
 
 export const startWinPhase = ({

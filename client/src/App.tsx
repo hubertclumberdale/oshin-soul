@@ -35,7 +35,7 @@ function App() {
   // const [error, setError] = useState<string>("");
 
   useEffect(() => {
-    const websocket = new WebSocket("ws://localhost:7002");
+    const websocket = new WebSocket("ws://192.168.1.239:7002");
     setWs(websocket);
   }, []);
 
@@ -66,9 +66,11 @@ function App() {
           break;
         case SocketBroadcast.RoomJoined:
           console.log("Room joined", message.data.roomId);
-          setRoomId(message.data.roomId);
-          setPlayerId(message.data.playerId);
-          setGameMode(Phase.Lobby);
+          if(!roomId && !playerId){
+            setRoomId(message.data.roomId);
+            setPlayerId(message.data.playerId);
+            setGameMode(Phase.Lobby);
+          }
 
           break;
 
