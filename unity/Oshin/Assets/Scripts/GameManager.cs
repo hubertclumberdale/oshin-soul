@@ -177,6 +177,7 @@ public class GameManager : MonoBehaviour
 
     public void SendObtainedPacket(string word, string playerId)
     {
+        Debug.Log("Sending obtained packet");
         websocketManager.SendObtainedPacket(word, playerId);
     }
 

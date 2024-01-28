@@ -121,12 +121,12 @@ public class WebsocketManager : MonoBehaviour
     private void AddPlayer(string playerId){
         Debug.Log("Adding player: " + playerId);
          gameManager.InstantiatePlayer(playerId);
-         GenerateObstacles();
     }
     
     private void StartMovementPhaseTimer()
     {
         gameManager.StartMovementPhaseTimer();
+        GenerateObstacles();
     }
 
     private void GenerateObstacles(){

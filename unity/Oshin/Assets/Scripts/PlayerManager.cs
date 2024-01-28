@@ -19,8 +19,8 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         characterController = GetComponent<CharacterController>();
-        GameManager gameManager = FindObjectOfType<GameManager>();
-        AudioManager audioManager = FindObjectOfType<AudioManager>();
+        gameManager = FindObjectOfType<GameManager>();
+        audioManager = FindObjectOfType<AudioManager>();
     }
     void Update()
     {
@@ -50,14 +50,13 @@ public class PlayerManager : MonoBehaviour
         {
             Debug.Log("Player collided with pickWord");
             TextMesh word = other.GetComponent<TextMesh>();
+            string wordText = word.text;
             Debug.Log("playerId: " + playerId);
-
-            string wordText = word.text; // Store word.text as a string
-            Debug.Log("wordText: " + wordText);
-            gameManager.SendObtainedPacket(wordText, this.playerId);
+            
+            gameManager.SendObtainedPacket(wordText, playerId);
 
             Destroy(other.gameObject);
-            audioManager.PlayPowerup();
+            audioManager.PlayPowerup(); 
         }
     }
 
