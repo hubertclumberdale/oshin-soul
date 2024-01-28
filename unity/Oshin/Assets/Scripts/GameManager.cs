@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
     public int composePhaseTimerDuration = 10;
     public int votePhaseTimerDuration = 10;
 
+    public string[] packs;
+
 
     public void StartMovementPhaseTimer()
     {
@@ -82,6 +84,17 @@ public class GameManager : MonoBehaviour
                 player.GetComponent<PlayerManager>().inputVector = new Vector2(x, y);
             }
         }
+    }
+
+    public string GetRandomPack()
+    {
+        return packs[Random.Range(0, packs.Length)];
+    }
+
+    public string PlayerPickedUpPack(string playerId, string packName)
+    {
+        Debug.Log("Player: " + playerId + " picked up pack: " + packName);
+        websocketManager.SendPlayerPickedUpPack(playerId, packName);
     }
 
 }

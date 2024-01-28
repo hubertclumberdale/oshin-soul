@@ -43,6 +43,7 @@ export interface SocketData {
     votes: Votes
     winningChoice: Choice
     players: Player[]
+    packNames: string[]
 }
 export interface SocketMessage {
     command: SocketEvent | SocketBroadcast;
@@ -85,6 +86,8 @@ export enum SocketEvent {
     VotePhaseTimerFinished = 'vote-phase-timer-finished',
     ReadyForNextRound = 'ready-for-next-round',
     NewGame = 'new-game',
+    GetPacks = 'get-packs',
+    GetWords = 'get-words',
 }
 
 export enum SocketBroadcast {
@@ -103,4 +106,5 @@ export enum SocketBroadcast {
     PlayerWords = 'player-words',
     StartComposePhaseTimer = 'start-compose-phase-timer',
     StartVotePhaseTimer = 'start-vote-phase-timer',
+    Packs = 'packs',
 }

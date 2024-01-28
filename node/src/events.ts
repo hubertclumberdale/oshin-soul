@@ -4,6 +4,7 @@ import { Phase, Room, SocketBroadcast, SocketData, SocketMessage } from "../type
 import { playerJoinedRoom, startComposePhase, startGameOverPhase, startLobbyPhase, startMovementPhase, startVotePhase, startWinPhase } from './broadcasts';
 import { chooseSentence, addNewPlayer, createRoom, movePlayer, addWordsToPlayer, assignVotesToChoices, closeRoom } from './actions';
 import { numberOfRounds } from '../config/game';
+import { packs } from '../config/packs';
 
 export const onCreateRoom = ({
     ws,
@@ -171,6 +172,22 @@ export const onMovementPhaseTimerFinished = (
         const message: SocketMessage = { command: SocketBroadcast.RoomNotFound, }
         ws.send(JSON.stringify(message));
     }
+}
+
+export const onGetPacks = (
+    {
+        ws,
+    }: {
+        ws: WebSocket,
+        wss: WebSocket.Server,
+        rooms: Room[]
+        data: Partial<SocketData>
+    }
+) => {
+    console.log('GetPacks event triggered',);
+    const packNames = packs.map((pack) => pack.type);
+    const message: SocketMessage = { command: SocketBroadcast.Packs, data: { packNames } }
+    ws.send(JSON.stringify(message));
 }
 
 export const onPlayerPickUp = ({

@@ -10,6 +10,8 @@ class SocketData {
     public string playerId;
     public float x;
     public float y;
+    public string[] packs;
+    public string obtainedPack;
 }
 
 [System.Serializable]
@@ -89,6 +91,10 @@ public class WebsocketManager : MonoBehaviour
             _actions.Enqueue(() => StartMovementPhaseTimer());
         }
 
+        if(socketMessage.command.ToString() == "packs"){
+            _actions.Enqueue(() => SavePacks(socketMessage.data.packs));
+        }
+
         if(socketMessage.command.ToString() == "player-movement"){
             Debug.Log("Room id: " + socketMessage.data.roomId);
             Debug.Log("Player id"+ socketMessage.data.playerId);
@@ -147,7 +153,6 @@ public class WebsocketManager : MonoBehaviour
         ws.Send(JsonUtility.ToJson(message));
     }
 
-
     public void SendComposePhaseTimerEnded(){
         Debug.Log("Sending compose-phase-timer-finished");
         SocketMessage message = new SocketMessage();
@@ -156,7 +161,6 @@ public class WebsocketManager : MonoBehaviour
         message.data.roomId = this.roomId;
         ws.Send(JsonUtility.ToJson(message));
     }
-
 
     public void SendVotePhaseTimerEnded(){
         Debug.Log("Sending vote-phase-timer-finished");
@@ -167,4 +171,26 @@ public class WebsocketManager : MonoBehaviour
         ws.Send(JsonUtility.ToJson(message));
     }
 
+    private void GetPackNames(){
+        Debug.Log("Sending get-pack-names");
+        SocketMessage message = new SocketMessage();
+        message.command = "get-packs";
+        message.data = new SocketData();
+        ws.Send(JsonUtility.ToJson(message));
+    }
+
+    private void SavePacks(string[] packs){
+        Debug.Log("Saving packs");
+        gameManager.packs = packs;
+    }
+
+    public void SendPlayerPickedUpPack(string packName){
+        Debug.Log("Sending player-pick-up");
+        SocketMessage message = new SocketMessage();
+        message.command = "player-pick-up";
+        message.data = new SocketData();
+        message.data.roomId = this.roomId;
+        message.data.obtainedPack = packName;
+        ws.Send(JsonUtility.ToJson(message));
+    }
 }
