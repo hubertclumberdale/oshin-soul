@@ -12,13 +12,15 @@ public class PlayerManager : MonoBehaviour
 
     private CharacterController characterController;
 
+    private AudioManager audioManager
+
 
     private GameManager gameManager;
     void Start()
     {
         characterController = GetComponent<CharacterController>();
         GameManager gameManager = FindObjectOfType<GameManager>();
-       
+        audioManager audioManager = FindObjectOfType<AudioManager>();
     }
     void Update()
     {
@@ -50,7 +52,7 @@ public class PlayerManager : MonoBehaviour
 
             string wordText = word.text; // Store word.text as a string
             Debug.Log("wordText: " + wordText);
-            gameManager.SendObtainedPacket(wordText, playerId);
+            gameManager.SendObtainedPacket(wordText, this.playerId);
 
             Destroy(other.gameObject);
         }

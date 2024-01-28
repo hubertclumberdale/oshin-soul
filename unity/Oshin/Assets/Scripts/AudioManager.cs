@@ -33,20 +33,27 @@ public class AudioManager : MonoBehaviour
         PlaySound(playing);
     }
 
-    public void PlayRockHit(){
-        AudioClip randomRockAudioClip = GetRandomAudioClip(rockAudioClips);
-        PlaySound(randomRockAudioClip);
+    public void PlayPlaying(){
+        audioSource.Stop();
+        PlaySound(playing);
     }
 
-    public void PlayPowerUp(){
-        AudioClip randomPowerUpClip = GetRandomAudioClip(powerUpAudioClips);
-        PlaySound(randomPowerUpClip);
+    public void PlayMovement(){
+        PlaySound(movementAudioClip);
     }
 
-    public void PlayGrow(){
-        AudioClip randomGrowAudioClip = GetRandomAudioClip(growAudioClips);
-        PlaySound(randomGrowAudioClip);
+    public void PlayCollide(){
+        PlaySound(collideAudioClip);
     }
+
+    public void PlayPowerup(){
+        PlaySound(powerupAudioClip);
+    }
+
+    public void PlayEndTimer(){
+        PlaySound(endtimerAudioClip);
+    }
+
 
     private void PlaySound(AudioClip audioClip){
         audioSource.PlayOneShot(audioClip, volume);
