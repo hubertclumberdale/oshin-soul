@@ -4,7 +4,17 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
+    public Text roomNumber;
 
+    public Text roundNumber;
+
+    public Text timer;
+
+    public Text sentence;
+
+    public Text score;
+
+    public Text gameModeText;
 
     public GameObject playerPrefab;
     public WebsocketManager websocketManager;
@@ -20,48 +30,58 @@ public class GameManager : MonoBehaviour
     public string[] packs;
 
     public void StartMovementPhaseTimer()
-    {
+    {   
+        setGameMode("Movement");
         StartCoroutine(MovementPhaseTimer());
     }
 
     public void StartComposePhaseTimer()
     {
+        setGameMode("Compose");
         StartCoroutine(ComposePhaseTimer());
     }
 
 
     public void StartVotePhaseTimer()
     {
+        setGameMode("Vote");
         StartCoroutine(VotePhaseTimer());
     }
 
-    IEnumerator MovementPhaseTimer()
+   IEnumerator MovementPhaseTimer()
     {
-        while (true)
+        currentTimer = movementPhaseTimerDuration;
+        while (currentTimer > 0)
         {
-            yield return new WaitForSeconds(movementPhaseTimerDuration);
-            websocketManager.SendMovementPhaseTimerEnded();
+            yield return new WaitForSeconds(1);
+            currentTimer--;
+            UpdateTimerText();
         }
+        websocketManager.SendMovementPhaseTimerEnded();
     }
 
-    // Define the ActionPhaseTimer coroutine
     IEnumerator ComposePhaseTimer()
     {
-        while (true)
+        currentTimer = composePhaseTimerDuration;
+        while (currentTimer > 0)
         {
-            yield return new WaitForSeconds(composePhaseTimerDuration);
-            websocketManager.SendComposePhaseTimerEnded();
+            yield return new WaitForSeconds(1);
+            currentTimer--;
+            UpdateTimerText();
         }
+        websocketManager.SendComposePhaseTimerEnded();
     }
 
-    // Define the PlanningPhaseTimer coroutine
     IEnumerator VotePhaseTimer()
     {
-        while (true)
+        currentTimer = votePhaseTimerDuration;
+        while (currentTimer > 0)
         {
-            yield return new WaitForSeconds(votePhaseTimerDuration);
-            websocketManager.SendVotePhaseTimerEnded();
+            yield return new WaitForSeconds(1);
+            currentTimer--;
+            UpdateTimerText();
         }
+        websocketManager.SendVotePhaseTimerEnded();
     }
 
     public void InstantiatePlayer(string playerId)
@@ -94,6 +114,37 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Player: " + playerId + " picked up pack: " + packName);
         websocketManager.SendPlayerPickedUpPack(playerId, packName);
+    }
+
+    public void setRoomNumber(string roomNumber)
+    {
+        this.roomNumber.text = roomNumber;
+    }
+
+    public void setRoundNumber(string roundNumber)
+    {
+        this.roundNumber.text = roundNumber;
+    }
+
+    public void setTimer(string timer)
+    {
+        this.timer.text = timer;
+    }
+
+    public void setSentence(string sentence)
+    {
+        this.sentence.text = sentence;
+    }
+
+    public void setScore(string score)
+    {
+        this.score.text = score;
+    }
+
+    public void setGameMode(string gameMode)
+    {
+        this.gameMode = gameMode;
+        this.gameModeText.text = gameMode;
     }
 
 }

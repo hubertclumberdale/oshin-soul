@@ -116,7 +116,7 @@ public class WebsocketManager : MonoBehaviour
     }
 
     private void SetGameMode(string gameMode){
-        gameManager.gameMode = gameMode;
+        gameManager.setGameMode(gameMode);
     }
 
     private void SetRoomId(string roomId){
