@@ -91,7 +91,9 @@ public class GameManager : MonoBehaviour
 
     public void UpdateTimerText()
     {
-        timer.text = currentTimer.ToString();
+        if(timer != null){
+            timer.text = currentTimer.ToString();
+        }
     }
 
     public void InstantiatePlayer(string playerId)
@@ -152,7 +154,9 @@ public class GameManager : MonoBehaviour
     public void setGameMode(string gameMode)
     {
         this.gameMode = gameMode;
-        this.gameModeText.text = gameMode;
+        if(this.gameModeText != null){
+            this.gameModeText.text = gameMode;
+        }
     }
 
     void InstantiateObstacle()

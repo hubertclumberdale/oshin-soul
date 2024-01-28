@@ -80,9 +80,6 @@ public class WebsocketManager : MonoBehaviour
             _actions.Enqueue(() => SetRoomId(socketMessage.data.roomId));
         }
 
-        if(socketMessage.command.ToString() == "movement-phase"){
-            _actions.Enqueue(() => SetGameMode("movement-phase"));
-        }
         if(socketMessage.command.ToString() == "room-joined"){
             _actions.Enqueue(() => AddPlayer(socketMessage.data.playerId));
         }
