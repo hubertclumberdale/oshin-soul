@@ -12,6 +12,7 @@ public class Obstacle : MonoBehaviour
         GameManager gameManager = FindObjectOfType<GameManager>();
         if (gameManager != null)
         {
+            Debug.Log("Getting random pack")
             this.packName = gameManager.GetRandomPack();
         }
     }
@@ -28,7 +29,8 @@ public class Obstacle : MonoBehaviour
 
             Rigidbody rb = textMeshInstance.GetComponent<Rigidbody>();
             Vector3 randomDirection = transform.position-plPos;
-            rb.AddForce(randomDirection * Random.Range(0, 10), ForceMode.Impulse);
+            rb.AddForce(randomDirection * Random.Range(0, 10), ForceMode.Impulse)
+            Debug,Log("Exploded")
             isExploded = true;
         }
     }
