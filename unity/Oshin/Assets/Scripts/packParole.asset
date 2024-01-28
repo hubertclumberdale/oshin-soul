@@ -13,8 +13,24 @@ MonoBehaviour:
   m_Name: packParole
   m_EditorClassIdentifier: 
   allWords:
-  - cacca
-  - pupu
-  - prete
-  - bambino
-  - napoli
+  - animals
+  - animals2
+  - jail
+  - hands
+  - holy
+  - monkey
+  - slurs
+  - napoletano
+  - napoletano2
+  - aliens
+  - napoletanoGangster
+  - gangsta
+  - feet
+  - student
+  - illness
+  - disgust
+  - plants
+  - evil
+  - mafia
+  - jester
+  - violence
