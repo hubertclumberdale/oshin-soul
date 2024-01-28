@@ -35,7 +35,7 @@ function App() {
   // const [error, setError] = useState<string>("");
 
   useEffect(() => {
-    const websocket = new WebSocket("ws://192.168.1.239:7002");
+    const websocket = new WebSocket("ws://192.168.1.59:7002");
     setWs(websocket);
   }, []);
 

@@ -10,10 +10,10 @@ public class AudioManager : MonoBehaviour
 
     private AudioSource audioSource;
 
-    public AudioClip[] rockAudioClips;
-
-    public AudioClip[] growAudioClips;
-    public AudioClip[] powerUpAudioClips;
+    public AudioClip movementAudioClip;
+    public AudioClip collideAudioClip;
+    public AudioClip powerupAudioClip;
+    public AudioClip endtimerAudioClip
 
 
     public float volume = 1;
