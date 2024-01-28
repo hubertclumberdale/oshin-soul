@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
     public Text gameModeText;
 
     public GameObject playerPrefab;
+
+    public GameObject obstaclePrefab;   
     public WebsocketManager websocketManager;
     private List<GameObject> players = new List<GameObject>();
 
@@ -153,6 +155,26 @@ public class GameManager : MonoBehaviour
     {
         this.gameMode = gameMode;
         this.gameModeText.text = gameMode;
+    }
+
+    void InstantiateObstacle()
+    {
+        GameObject obstacle = Instantiate(obstaclePrefab) as GameObject;
+        
+        Vector3 spawnPosition = GameObject.Find("SpawnPoint").transform.position;
+        float randomX = Random.Range(-5f, 5f); // Adjust the range as needed
+        float randomZ = Random.Range(-5f, 5f); // Adjust the range as needed
+        spawnPosition += new Vector3(randomX, 0f, randomZ);
+        
+        obstacle.transform.position = spawnPosition;
+    }
+
+    public void GenerateObstacles()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            InstantiateObstacle();
+        }
     }
 
 }

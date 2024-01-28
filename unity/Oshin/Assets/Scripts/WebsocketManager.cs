@@ -36,8 +36,6 @@ public class WebsocketManager : MonoBehaviour
         ws.OnClose += OnCloseHandler;
         ws.ConnectAsync();
 
-        GetPackNames();
-
     }
     private void OnCloseHandler(object sender, CloseEventArgs e)
     {
@@ -70,7 +68,7 @@ public class WebsocketManager : MonoBehaviour
         SocketMessage message = new SocketMessage();
         message.command = "create-room";
         ws.Send(JsonUtility.ToJson(message));
-
+        GetPackNames();
     }
 
     void OnMessageHandler(object sender, MessageEventArgs e)
@@ -126,11 +124,17 @@ public class WebsocketManager : MonoBehaviour
 
     private void AddPlayer(string playerId){
         Debug.Log("Adding player: " + playerId);
-        gameManager.InstantiatePlayer(playerId);
+/*         gameManager.InstantiatePlayer(playerId);
+ */        GenerateObstacles();
     }
     
-    private void StartMovementPhaseTimer(){
+    private void StartMovementPhaseTimer()
+    {
         gameManager.StartMovementPhaseTimer();
+    }
+
+    private void GenerateObstacles(){
+        gameManager.GenerateObstacles();
     }
 
     private void StartComposePhaseTimer(){
