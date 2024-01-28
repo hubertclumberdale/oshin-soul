@@ -15,8 +15,9 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         characterController = GetComponent<CharacterController>();
+        GameManager gameManager = FindObjectOfType<GameManager>();
+       
     }
-
     void Update()
     {
         MovePlayer();
@@ -40,8 +41,11 @@ public class PlayerManager : MonoBehaviour
         if(other.gameObject.tag == "pickWord")
         {
             TextMesh word = other.GetComponent<TextMesh>();
-            pickedWords.Add( word.text); 
+            //TODO: send to websocket obtainedPacket that is word.text
+
+
             Destroy(other.gameObject);
+            
         }
 
     }

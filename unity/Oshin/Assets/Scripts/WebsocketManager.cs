@@ -188,6 +188,7 @@ public class WebsocketManager : MonoBehaviour
     private void SavePacks(string[] packs){
         Debug.Log("Saving packs");
         gameManager.packs = packs;
+        Debug.Log(packs);
     }
 
     public void SendPlayerPickedUpPack(string playerId, string packName){
