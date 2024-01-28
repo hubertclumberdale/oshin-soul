@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,6 +27,8 @@ public class GameManager : MonoBehaviour
     public int movementPhaseTimerDuration = 30;
     public int composePhaseTimerDuration = 30;
     public int votePhaseTimerDuration = 30;
+
+    public int currentTimer;
 
     public string[] packs;
 
@@ -82,6 +85,11 @@ public class GameManager : MonoBehaviour
             UpdateTimerText();
         }
         websocketManager.SendVotePhaseTimerEnded();
+    }
+
+    public void UpdateTimerText()
+    {
+        timer.text = currentTimer.ToString();
     }
 
     public void InstantiatePlayer(string playerId)
