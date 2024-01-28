@@ -5,6 +5,7 @@ interface AdminPanelProps {
   ws: WebSocket;
   roomId: string | undefined;
   gameMode: string;
+  playerId: string | undefined;
   endMovementTimer: () => void;
   addPackToPlayer: () => void;
 }
@@ -13,8 +14,9 @@ const AdminPanel = ({
   ws,
   roomId,
   gameMode,
+  playerId,
   endMovementTimer,
-  addPackToPlayer
+  addPackToPlayer,
 }: AdminPanelProps) => {
   const createTestRoom = () => {
     if (!ws) return;
@@ -38,16 +40,23 @@ const AdminPanel = ({
           <Chip>{roomId ? roomId : "No Room Id"}</Chip>
         </Card>
       )}
-      {gameMode === Phase.Movement && <Card size="sm" orientation="horizontal">
-        <Button size="sm" onClick={endMovementTimer}>
-          End Movement Timer
-        </Button>
-      </Card>}
-      {gameMode === Phase.Movement && <Card size="sm" orientation="horizontal">
-        <Button size="sm" onClick={addPackToPlayer}>
-          Add Random Pack to Player
-        </Button>
-      </Card>}
+      {gameMode === Phase.Movement && (
+        <Card size="sm" orientation="horizontal">
+          <Button size="sm" onClick={endMovementTimer}>
+            End Movement Timer
+          </Button>
+        </Card>
+      )}
+      {gameMode === Phase.Movement && (
+        <Card size="sm" orientation="horizontal">
+          <Button size="sm" onClick={addPackToPlayer}>
+            Add Random Pack to Player
+          </Button>
+        </Card>
+      )}
+      <Card size="sm" orientation="horizontal">
+        <Chip>{playerId ? "Player Id: "+ playerId : "No Player Id"}</Chip>
+      </Card>
     </Card>
   );
 };

@@ -20,7 +20,7 @@ export interface Choice {
 export interface Room {
     id: string;
     players: Player[];
-    unity: string
+    unity: WebSocket
     incompleteSentence: string;
     currentMode: Phase;
     winner: string | null;

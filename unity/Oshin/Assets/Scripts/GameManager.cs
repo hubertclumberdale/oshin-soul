@@ -13,12 +13,11 @@ public class GameManager : MonoBehaviour
     public int timerDuration;
     public string gameMode;
 
-    public int movementPhaseTimerDuration = 10;
-    public int composePhaseTimerDuration = 10;
-    public int votePhaseTimerDuration = 10;
+    public int movementPhaseTimerDuration = 30;
+    public int composePhaseTimerDuration = 30;
+    public int votePhaseTimerDuration = 30;
 
     public string[] packs;
-
 
     public void StartMovementPhaseTimer()
     {
@@ -91,7 +90,7 @@ public class GameManager : MonoBehaviour
         return packs[Random.Range(0, packs.Length)];
     }
 
-    public string PlayerPickedUpPack(string playerId, string packName)
+    public void PlayerPickedUpPack(string playerId, string packName)
     {
         Debug.Log("Player: " + playerId + " picked up pack: " + packName);
         websocketManager.SendPlayerPickedUpPack(playerId, packName);

@@ -19,8 +19,8 @@ export const startLobbyPhase = (
     });
     room.currentMode = Phase.Lobby;
 
-    cleanRoom({room});
-    
+    cleanRoom({ room });
+
     console.log('Starting lobby phase');
 
     const message: SocketMessage = { command: SocketBroadcast.LobbyPhase, data: { roomId: room.id } };
@@ -128,12 +128,11 @@ export const playerJoinedRoom = ({
     console.log('Player joined room:', player);
     const message: SocketMessage = { command: SocketBroadcast.RoomJoined, data: { roomId: room.id, playerId: player.id } }
     ws.send(JSON.stringify(message));
+    console.log("room.unity", room.unity)
+    if (room.unity) {
+        room.unity.send(JSON.stringify(message));
+    }
 
-    wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN && client.id === room.unity) {
-            client.send(JSON.stringify(message));
-        }
-    });
 }
 
 export const startWinPhase = ({
@@ -145,7 +144,15 @@ export const startWinPhase = ({
 }) => {
     console.log('Starting win phase');
     room.currentMode = Phase.Win;
-    const winningChoice = room.choices.reduce((prev, current) => (prev.score > current.score) ? prev : current)
+    if (!room.choices) {
+        const message: SocketMessage = { command: SocketBroadcast.WinPhase, data: { roomId: room.id, winningChoice: { choice: 'No one won! Fuck YOU!!!', score: 0, playerId: '-1' } } }
+        wss.clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify(message));
+            }
+        });
+    }
+    const winningChoice = room.choices?.reduce((prev, current) => (prev.score > current.score) ? prev : current)
     const message: SocketMessage = { command: SocketBroadcast.WinPhase, data: { roomId: room.id, winningChoice } }
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {

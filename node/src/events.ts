@@ -8,7 +8,6 @@ import { packs } from '../config/packs';
 
 export const onCreateRoom = ({
     ws,
-    wss,
     rooms
 }: {
     ws: WebSocket,
@@ -20,11 +19,7 @@ export const onCreateRoom = ({
         rooms
     })
     const message: SocketMessage = { command: SocketBroadcast.RoomCreated, data: { roomId: newRoom.id } }
-    wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify(message));
-        }
-    })
+    ws.send(JSON.stringify(message));
     console.log('Room created:', newRoom);
 }
 
@@ -132,7 +127,7 @@ export const onPlayerMovement = (
         if (player) {
             const { x, y } = data
             movePlayer({
-                roomId: data.roomId,
+                room,
                 playerId: data.playerId,
                 x,
                 y,
@@ -365,10 +360,6 @@ export const onVotePhaseTimerFinished = (
     console.log('TimerFinished event triggered in room:', data.roomId);
     const room = rooms.find((room) => room.id == data.roomId);
     if (room) {
-        assignVotesToChoices({
-            room,
-            votes: data.votes
-        })
         startWinPhase({
             wss,
             room,
