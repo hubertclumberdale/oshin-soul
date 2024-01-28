@@ -263,6 +263,7 @@ function App() {
           <AdminPanel
             ws={ws}
             roomId={roomId}
+            playerId={playerId}
             gameMode={gameMode}
             endMovementTimer={endMovementTimer}
             addPackToPlayer={addPackToPlayer}

@@ -36,6 +36,8 @@ public class WebsocketManager : MonoBehaviour
         ws.OnClose += OnCloseHandler;
         ws.ConnectAsync();
 
+        GetPackNames();
+
     }
     private void OnCloseHandler(object sender, CloseEventArgs e)
     {
@@ -184,12 +186,13 @@ public class WebsocketManager : MonoBehaviour
         gameManager.packs = packs;
     }
 
-    public void SendPlayerPickedUpPack(string packName){
+    public void SendPlayerPickedUpPack(string playerId, string packName){
         Debug.Log("Sending player-pick-up");
         SocketMessage message = new SocketMessage();
         message.command = "player-pick-up";
         message.data = new SocketData();
         message.data.roomId = this.roomId;
+        message.data.playerId = playerId;
         message.data.obtainedPack = packName;
         ws.Send(JsonUtility.ToJson(message));
     }

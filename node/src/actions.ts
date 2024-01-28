@@ -28,10 +28,11 @@ export const createRoom = (
     console.log('CreateRoom event triggered in room:', ws.id);
     // Create a new room
     const roomId = generateId();
+    console.log('unity id', ws)
     const room: Room = {
         id: roomId,
         players: [],
-        unity: ws.id,
+        unity: ws,
         incompleteSentence: '',
         currentMode: Phase.Lobby,
         winner: null,
@@ -54,25 +55,25 @@ export const addNewPlayer = ({
 }
 
 export const movePlayer = ({
-    roomId,
+    room,
     playerId,
     x,
     y,
     wss
 }: {
-    roomId: string,
+    room: Room,
     playerId: string,
     x: number,
     y: number,
     wss: WebSocket.Server
 }) => {
-    const message: SocketMessage = { command: SocketBroadcast.PlayerMovement, data: { roomId: roomId, playerId: playerId, x, y } }
-    wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-            console.log("sending movement message", message)
-            client.send(JSON.stringify(message));
-        }
-    });
+    const message: SocketMessage = { command: SocketBroadcast.PlayerMovement, data: { roomId: room.id, playerId: playerId, x, y } }
+    
+    if(room.unity?.readyState === WebSocket.OPEN) {
+        console.log("sending movement message", message)
+        room.unity.send(JSON.stringify(message));
+
+    }
 }
 export const chooseSentence = ({
     room
@@ -133,6 +134,9 @@ const getRandomUniqueWords = ({ words }: { words: string[] }) => {
 }
 
 export const assignVotesToChoices = ({ room, votes }: { room: Room, votes: Votes }) => {
+    if(!votes){
+        return 
+    }
     Object.entries(votes).forEach(([playerId, vote]) => {
         const choice = room.choices.find((choice) => choice.playerId === playerId);
         if (choice) {
