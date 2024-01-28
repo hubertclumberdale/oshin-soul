@@ -35,21 +35,25 @@ public class PlayerManager : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Obstacle")
+        if (other.gameObject.tag == "Obstacle")
         {
+            Debug.Log("Player collided with obstacle");
+            Debug.Log(other.gameObject.name);
             Obstacle obstacle = other.GetComponent<Obstacle>();
             obstacle.Esplodi(transform.position);
         }
-        if(other.gameObject.tag == "pickWord")
+        if (other.gameObject.tag == "pickWord")
         {
+            Debug.Log("Player collided with pickWord");
             TextMesh word = other.GetComponent<TextMesh>();
-            //TODO: send to websocket obtainedPacket that is word.text
-            gameManager.SendObtainedPacket(word.text, playerId);
+            Debug.Log("playerId: " + playerId);
+
+            string wordText = word.text; // Store word.text as a string
+            Debug.Log("wordText: " + wordText);
+            gameManager.SendObtainedPacket(wordText, playerId);
 
             Destroy(other.gameObject);
-            
         }
-
     }
 
      void LockPlayerOnY()

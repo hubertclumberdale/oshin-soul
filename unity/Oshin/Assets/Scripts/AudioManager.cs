@@ -49,7 +49,6 @@ public class AudioManager : MonoBehaviour
     }
 
     private void PlaySound(AudioClip audioClip){
-        Debug.Log("I am playing "+audioClip.name);
         audioSource.PlayOneShot(audioClip, volume);
     }
 }

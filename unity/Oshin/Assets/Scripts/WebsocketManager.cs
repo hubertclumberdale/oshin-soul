@@ -96,10 +96,6 @@ public class WebsocketManager : MonoBehaviour
         }
 
         if(socketMessage.command.ToString() == "player-movement"){
-            Debug.Log("Room id: " + socketMessage.data.roomId);
-            Debug.Log("Player id"+ socketMessage.data.playerId);
-            Debug.Log("Player x: " + socketMessage.data.x);
-            Debug.Log("Player y: " + socketMessage.data.y);
 
             _actions.Enqueue(() => MovePlayer(socketMessage.data.roomId, socketMessage.data.playerId, socketMessage.data.x, socketMessage.data.y));
         }
@@ -146,7 +142,6 @@ public class WebsocketManager : MonoBehaviour
     }
 
     private void MovePlayer(string roomId, string playerId, float x, float y){
-        Debug.Log("Moving player: " + playerId + " in room: " + roomId + " in direction: " + x + ", " + y);
         gameManager.MovePlayer(roomId, playerId, x, y);
     }
 
@@ -209,6 +204,7 @@ public class WebsocketManager : MonoBehaviour
         message.data = new SocketData();
         message.data.roomId = this.roomId;
         message.data.playerId = playerId;
+        Debug.Log("packName: " + packName);
         message.data.obtainedPack = packName;
         ws.Send(JsonUtility.ToJson(message));
     }

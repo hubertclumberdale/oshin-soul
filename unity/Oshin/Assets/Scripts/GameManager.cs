@@ -104,7 +104,6 @@ public class GameManager : MonoBehaviour
 
     public void MovePlayer(string roomId, string playerId, float x, float y)
     {
-        Debug.Log("Moving player: " + playerId + " in room: " + roomId + " in direction: " + x + ", " + y);
         // TODO: find player by id and move it
         foreach (GameObject player in players)
         {
@@ -122,7 +121,6 @@ public class GameManager : MonoBehaviour
 
     public void PlayerPickedUpPack(string playerId, string packName)
     {
-        Debug.Log("Player: " + playerId + " picked up pack: " + packName);
         websocketManager.SendPlayerPickedUpPack(playerId, packName);
     }
 

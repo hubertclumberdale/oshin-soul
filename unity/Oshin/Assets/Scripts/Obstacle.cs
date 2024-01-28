@@ -14,7 +14,6 @@ public class Obstacle : MonoBehaviour
         GameManager gameManager = FindObjectOfType<GameManager>();
         int randomIndex = Random.Range(0, obstacleNames.allWords.Length);
         packName = obstacleNames.allWords[randomIndex];
-        Debug.Log("Pack name: " + packName);
     }
 
     public void Esplodi(Vector3 plPos)
@@ -31,7 +30,6 @@ public class Obstacle : MonoBehaviour
             Rigidbody rb = textMeshInstance.GetComponent<Rigidbody>();
             Vector3 randomDirection = transform.position - plPos;
             rb.AddForce(randomDirection * Random.Range(0, 10), ForceMode.Impulse);
-            Debug.Log("Exploded");
             isExploded = true;
         }
     }
